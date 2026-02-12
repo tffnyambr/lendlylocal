@@ -1,5 +1,6 @@
 import { useState } from "react";
 import BottomNav, { type TabId } from "@/components/BottomNav";
+import ListItemFAB from "@/components/ListItemFAB";
 import HomeTab from "@/tabs/HomeTab";
 import CommsTab from "@/tabs/CommsTab";
 import ActivityTab from "@/tabs/ActivityTab";
@@ -35,6 +36,7 @@ const Index = () => {
           </motion.div>
         </AnimatePresence>
       </main>
+      <ListItemFAB />
       <BottomNav active={activeTab} onChange={setActiveTab} />
     </div>
   );
