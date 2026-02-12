@@ -62,6 +62,7 @@ const HomeTab = () => {
             </div>
 
             {/* Categories */}
+            <h3 className="text-sm font-semibold text-foreground">Browse Categories</h3>
             <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
               {categories.map((cat) => (
                 <button
