@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Search, SlidersHorizontal, MapPin, Heart } from "lucide-react";
+import { Search, SlidersHorizontal, MapPin, Heart, TrendingUp } from "lucide-react";
 import SegmentedControl from "@/components/SegmentedControl";
 import ItemCard from "@/components/ItemCard";
 import { categories, listings } from "@/data/mockData";
 import { AnimatePresence, motion } from "framer-motion";
+import heroPopular from "@/assets/hero-popular.jpg";
 
 const HomeTab = () => {
   const [segment, setSegment] = useState(0);
@@ -45,6 +46,19 @@ const HomeTab = () => {
               <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-card">
                 <SlidersHorizontal size={16} className="text-primary-foreground" />
               </button>
+            </div>
+
+            {/* Hero - Popular Items */}
+            <div className="relative overflow-hidden rounded-2xl">
+              <img src={heroPopular} alt="Popular items" className="h-36 w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
+              <div className="absolute bottom-3 left-4 right-4">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <TrendingUp size={14} className="text-primary-foreground" />
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-primary-foreground/80">Trending Now</span>
+                </div>
+                <h2 className="font-display text-lg font-bold text-primary-foreground leading-tight">Popular Items Near You</h2>
+              </div>
             </div>
 
             {/* Categories */}
