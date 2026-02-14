@@ -1,6 +1,7 @@
 import { Heart, MapPin, Star } from "lucide-react";
 import type { ListingItem } from "@/data/mockData";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 interface ItemCardProps {
@@ -9,13 +10,15 @@ interface ItemCardProps {
 
 const ItemCard = ({ item }: ItemCardProps) => {
   const [saved, setSaved] = useState(item.saved);
+  const navigate = useNavigate();
 
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group mb-4 break-inside-avoid overflow-hidden rounded-2xl bg-card shadow-card"
+      className="group mb-4 break-inside-avoid cursor-pointer overflow-hidden rounded-2xl bg-card shadow-card"
+      onClick={() => navigate(`/item/${item.id}`)}
     >
       <div className="relative">
         <img
@@ -25,7 +28,7 @@ const ItemCard = ({ item }: ItemCardProps) => {
           loading="lazy"
         />
         <button
-          onClick={() => setSaved(!saved)}
+          onClick={(e) => { e.stopPropagation(); setSaved(!saved); }}
           className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-card/80 backdrop-blur-sm transition-transform active:scale-90"
         >
           <Heart
