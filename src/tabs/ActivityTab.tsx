@@ -21,7 +21,7 @@ const ActivityTab = () => {
                 <img src={bookings[0].itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-foreground">{bookings[0].itemTitle}</h3>
-                  <p className="text-xs text-muted-foreground">Due back: Feb 14</p>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground"><Calendar size={10} /> Due back: Feb 14</p>
                   <div className="mt-2 flex gap-2">
                     <span className="rounded-full bg-success/15 px-2.5 py-0.5 text-[10px] font-semibold text-success">Active</span>
                   </div>
@@ -36,7 +36,7 @@ const ActivityTab = () => {
                 <Calendar size={18} className="text-primary" />
                 <div>
                   <p className="text-sm font-medium text-foreground">Canon DSLR Camera</p>
-                  <p className="text-xs text-muted-foreground">Return by Feb 14 — 2 days left</p>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground"><Calendar size={10} /> Return by Feb 14 — 2 days left</p>
                 </div>
               </div>
             </div>
@@ -86,7 +86,7 @@ const ActivityTab = () => {
                 <img src={bookings[1].itemImage} alt="" className="h-12 w-12 rounded-xl object-cover" />
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-foreground">{bookings[1].itemTitle}</p>
-                  <p className="text-xs text-muted-foreground">{bookings[1].otherUser} · {bookings[1].startDate}</p>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">{bookings[1].otherUser} · <Calendar size={10} /> {bookings[1].startDate}</p>
                 </div>
                 <div className="flex gap-2">
                   <button className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">Accept</button>
