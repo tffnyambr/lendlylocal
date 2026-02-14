@@ -1,3 +1,4 @@
+import { Calendar } from "lucide-react";
 import type { BookingItem } from "@/data/mockData";
 
 const statusColors: Record<BookingItem["status"], string> = {
@@ -26,9 +27,10 @@ const BookingCard = ({ booking }: BookingCardProps) => {
           <p className="text-xs text-muted-foreground">with {booking.otherUser}</p>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">
-            {booking.startDate} – {booking.endDate}
-          </span>
+          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Calendar size={10} />
+              {booking.startDate} – {booking.endDate}
+            </span>
           <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold capitalize ${statusColors[booking.status]}`}>
             {booking.status}
           </span>

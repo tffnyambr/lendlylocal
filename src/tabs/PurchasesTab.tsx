@@ -2,7 +2,7 @@ import { useState } from "react";
 import SegmentedControl from "@/components/SegmentedControl";
 import { bookings, listings } from "@/data/mockData";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, MapPin, Minus, Plus, Trash2, Package } from "lucide-react";
+import { Clock, MapPin, Minus, Plus, Trash2, Package, Calendar, ArrowDownLeft, ArrowUpRight } from "lucide-react";
 
 const PurchasesTab = () => {
   const [segment, setSegment] = useState(0);
@@ -70,8 +70,16 @@ const PurchasesTab = () => {
               <div className="flex gap-3 mb-4">
                 <img src={bookings[0].itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground">{bookings[0].itemTitle}</h4>
-                  <p className="text-xs text-muted-foreground">{bookings[0].startDate} – {bookings[0].endDate}</p>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <h4 className="text-sm font-semibold text-foreground">{bookings[0].itemTitle}</h4>
+                    <span className="flex items-center gap-1 rounded-full bg-info/15 px-2 py-0.5 text-[10px] font-semibold text-info">
+                      <ArrowDownLeft size={10} /> Renting
+                    </span>
+                  </div>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar size={10} />
+                    {bookings[0].startDate} – {bookings[0].endDate}
+                  </p>
                 </div>
               </div>
 
@@ -90,10 +98,33 @@ const PurchasesTab = () => {
                     </div>
                     <div className="-mt-0.5">
                       <p className={`text-sm ${step.active ? "font-semibold text-primary" : step.done ? "font-medium text-foreground" : "text-muted-foreground"}`}>{step.label}</p>
-                      <p className="text-[11px] text-muted-foreground">{step.time}</p>
+                      <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                        {step.time !== "Now" && <Calendar size={9} />}
+                        {step.time}
+                      </p>
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            {/* Lending tracking */}
+            <div className="rounded-2xl bg-card p-4 shadow-card">
+              <div className="flex gap-3">
+                <img src={bookings[1].itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <h4 className="text-sm font-semibold text-foreground">{bookings[1].itemTitle}</h4>
+                    <span className="flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                      <ArrowUpRight size={10} /> Lending
+                    </span>
+                  </div>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar size={10} />
+                    {bookings[1].startDate} – {bookings[1].endDate}
+                  </p>
+                  <span className="mt-1 inline-block rounded-full bg-warning/15 px-2.5 py-0.5 text-[10px] font-semibold text-warning capitalize">{bookings[1].status}</span>
+                </div>
               </div>
             </div>
 
@@ -102,7 +133,10 @@ const PurchasesTab = () => {
               <Clock size={18} className="text-warning" />
               <div>
                 <p className="text-sm font-medium text-foreground">Return reminder</p>
-                <p className="text-xs text-muted-foreground">Canon DSLR Camera is due in 2 days</p>
+                <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Calendar size={10} />
+                  Canon DSLR Camera is due in 2 days
+                </p>
               </div>
             </div>
           </motion.div>
