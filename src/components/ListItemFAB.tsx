@@ -20,10 +20,10 @@ const ListItemFAB = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [deposit, setDeposit] = useState("");
+  const [liability, setLiability] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
   const [condition, setCondition] = useState("excellent");
-  const [deliveryOption, setDeliveryOption] = useState<"pickup" | "delivery" | "both">("both");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,10 +51,10 @@ const ListItemFAB = () => {
     setDescription("");
     setPrice("");
     setDeposit("");
+    setLiability("");
     setCategory("");
     setLocation("");
     setCondition("excellent");
-    setDeliveryOption("both");
   };
 
   const handleSubmit = () => {
@@ -201,7 +201,7 @@ const ListItemFAB = () => {
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-semibold text-foreground">
-                  Deposit
+                  Original Price
                 </label>
                 <input
                   type="number"
@@ -211,6 +211,20 @@ const ListItemFAB = () => {
                   className={inputClass}
                 />
               </div>
+            </div>
+
+            {/* Liability Fee */}
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-foreground">
+                Liability Fee
+              </label>
+              <input
+                type="number"
+                value={liability}
+                onChange={(e) => setLiability(e.target.value)}
+                placeholder="$0"
+                className={inputClass}
+              />
             </div>
 
             {/* Location */}
@@ -250,27 +264,6 @@ const ListItemFAB = () => {
               </div>
             </div>
 
-            {/* Delivery Option */}
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-foreground">
-                Handover
-              </label>
-              <div className="flex gap-2">
-                {(["pickup", "delivery", "both"] as const).map((opt) => (
-                  <button
-                    key={opt}
-                    onClick={() => setDeliveryOption(opt)}
-                    className={`flex-1 rounded-xl py-2 text-xs font-medium capitalize transition-all ${
-                      deliveryOption === opt
-                        ? "bg-primary text-primary-foreground shadow-card"
-                        : "bg-secondary text-secondary-foreground"
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
           <DrawerFooter>
