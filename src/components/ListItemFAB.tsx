@@ -21,6 +21,7 @@ const ListItemFAB = () => {
   const [price, setPrice] = useState("");
   const [deposit, setDeposit] = useState("");
   const [liability, setLiability] = useState("");
+  const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
   const [condition, setCondition] = useState("excellent");
@@ -52,6 +53,7 @@ const ListItemFAB = () => {
     setPrice("");
     setDeposit("");
     setLiability("");
+    setDiscount("");
     setCategory("");
     setLocation("");
     setCondition("excellent");
@@ -213,18 +215,32 @@ const ListItemFAB = () => {
               </div>
             </div>
 
-            {/* Liability Fee */}
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold text-foreground">
-                Liability Fee
-              </label>
-              <input
-                type="number"
-                value={liability}
-                onChange={(e) => setLiability(e.target.value)}
-                placeholder="$0"
-                className={inputClass}
-              />
+            {/* Liability Fee & Discount */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold text-foreground">
+                  Liability Fee
+                </label>
+                <input
+                  type="number"
+                  value={liability}
+                  onChange={(e) => setLiability(e.target.value)}
+                  placeholder="$0"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold text-foreground">
+                  Discount %
+                </label>
+                <input
+                  type="number"
+                  value={discount}
+                  onChange={(e) => setDiscount(e.target.value)}
+                  placeholder="0%"
+                  className={inputClass}
+                />
+              </div>
             </div>
 
             {/* Location */}
