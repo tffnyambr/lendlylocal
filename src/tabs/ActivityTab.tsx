@@ -44,23 +44,6 @@ const ActivityTab = () => {
               </div>
             </div>
 
-            {/* User's listed items */}
-            {userListings.length > 0 && (
-              <>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your Listed Items</h3>
-                {userListings.map((item) => (
-                  <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
-                    <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
-                    <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
-                      <p className="text-xs text-muted-foreground">${item.price}/day</p>
-                    </div>
-                    <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-semibold text-primary">Listed</span>
-                  </div>
-                ))}
-              </>
-            )}
-
             {/* Review prompt */}
             <div className="rounded-2xl bg-primary/5 p-4">
               <div className="flex items-center gap-3">
@@ -88,16 +71,29 @@ const ActivityTab = () => {
 
             {/* Listed items */}
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your Listings</h3>
-            {listings.slice(0, 3).map((item) => (
-              <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
-                <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
-                <div className="flex-1">
-                  <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
-                  <p className="text-xs text-muted-foreground">${item.price}/day</p>
+            {userListings.length > 0 ? (
+              userListings.map((item) => (
+                <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
+                  <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                  <div className="flex-1">
+                    <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+                    <p className="text-xs text-muted-foreground">${item.price}/day</p>
+                  </div>
+                  <ToggleRight size={24} className="text-success" />
                 </div>
-                <ToggleRight size={24} className="text-success" />
-              </div>
-            ))}
+              ))
+            ) : (
+              listings.slice(0, 3).map((item) => (
+                <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
+                  <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                  <div className="flex-1">
+                    <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+                    <p className="text-xs text-muted-foreground">${item.price}/day</p>
+                  </div>
+                  <ToggleRight size={24} className="text-success" />
+                </div>
+              ))
+            )}
 
             {/* Pending request */}
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Requests</h3>
