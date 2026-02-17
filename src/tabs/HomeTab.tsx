@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Search, SlidersHorizontal, MapPin, Heart, TrendingUp } from "lucide-react";
 import SegmentedControl from "@/components/SegmentedControl";
 import ItemCard from "@/components/ItemCard";
-import { categories, listings } from "@/data/mockData";
+import { categories } from "@/data/mockData";
+import { useListings } from "@/context/ListingsContext";
 import { AnimatePresence, motion } from "framer-motion";
 import heroPopular from "@/assets/hero-popular.jpg";
 
 const HomeTab = () => {
   const [segment, setSegment] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { listings } = useListings();
 
   const filtered = selectedCategory
     ? listings.filter((l) => l.category === selectedCategory)

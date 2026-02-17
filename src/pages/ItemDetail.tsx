@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { listings } from "@/data/mockData";
+import { useListings } from "@/context/ListingsContext";
 import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, Clock, ChevronRight, User } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -21,6 +21,7 @@ const availabilitySlots = [
 const ItemDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { listings } = useListings();
   const item = listings.find((l) => l.id === id);
   const [saved, setSaved] = useState(item?.saved ?? false);
 
