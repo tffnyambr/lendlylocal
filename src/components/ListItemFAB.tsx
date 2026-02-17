@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Plus, X, Camera, Upload, DollarSign, MapPin, Tag, FileText, Image } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "@/data/mockData";
+import { useListings } from "@/context/ListingsContext";
 import {
   Drawer,
   DrawerContent,
@@ -14,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const ListItemFAB = () => {
+  const { addListing } = useListings();
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [title, setTitle] = useState("");
@@ -60,7 +62,16 @@ const ListItemFAB = () => {
   };
 
   const handleSubmit = () => {
-    // Future: submit to backend
+    if (!title.trim()) return;
+    addListing({
+      title: title.trim(),
+      price: Number(price) || 0,
+      image: images[0] || "/placeholder.svg",
+      location: location.trim() || "Nearby",
+      category: category || "tech",
+      owner: "You",
+      ownerAvatar: "",
+    });
     resetForm();
     setOpen(false);
   };
