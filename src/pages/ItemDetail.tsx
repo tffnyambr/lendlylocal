@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useListings } from "@/context/ListingsContext";
-import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, Clock, ChevronRight, User } from "lucide-react";
+import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, ChevronRight, User } from "lucide-react";
+import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -11,12 +12,6 @@ const reviews = [
   { id: 3, user: "Sophie L.", rating: 5, date: "Nov 2025", comment: "Perfect for my weekend trip. Highly recommend this listing." },
 ];
 
-const availabilitySlots = [
-  { label: "This week", available: true },
-  { label: "Next week", available: true },
-  { label: "Feb 24 – Mar 2", available: false },
-  { label: "Mar 3 – Mar 9", available: true },
-];
 
 const ItemDetail = () => {
   const { id } = useParams();
@@ -120,27 +115,8 @@ const ItemDetail = () => {
         {/* Availability */}
         <section>
           <h2 className="font-display text-base font-semibold text-foreground">Availability</h2>
-          <div className="mt-2 flex flex-col gap-2">
-            {availabilitySlots.map((slot) => (
-              <div
-                key={slot.label}
-                className="flex items-center justify-between rounded-xl bg-card px-3 py-2.5 shadow-card"
-              >
-                <div className="flex items-center gap-2 text-sm text-foreground">
-                  <Calendar size={14} className="text-primary" />
-                  <span>{slot.label}</span>
-                </div>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    slot.available
-                      ? "bg-[hsl(var(--success)/0.1)] text-[hsl(var(--success))]"
-                      : "bg-destructive/10 text-destructive"
-                  }`}
-                >
-                  {slot.available ? "Available" : "Booked"}
-                </span>
-              </div>
-            ))}
+          <div className="mt-2">
+            <AvailabilityCalendar />
           </div>
         </section>
 
