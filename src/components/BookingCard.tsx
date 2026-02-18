@@ -1,4 +1,5 @@
 import { Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
 import type { BookingItem } from "@/data/mockData";
 
 const statusColors: Record<BookingItem["status"], string> = {
@@ -24,7 +25,12 @@ const BookingCard = ({ booking }: BookingCardProps) => {
       <div className="flex flex-1 flex-col justify-between py-0.5">
         <div>
           <h4 className="text-sm font-semibold text-foreground">{booking.itemTitle}</h4>
-          <p className="text-xs text-muted-foreground">with {booking.otherUser}</p>
+          <p className="text-xs text-muted-foreground">
+            with{" "}
+            <Link to={`/user/${encodeURIComponent(booking.otherUser)}`} className="font-medium text-primary hover:underline">
+              {booking.otherUser}
+            </Link>
+          </p>
         </div>
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1 text-xs text-muted-foreground">
