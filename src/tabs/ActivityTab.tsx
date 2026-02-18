@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import SegmentedControl from "@/components/SegmentedControl";
 import { useBookings } from "@/context/BookingsContext";
 import { useListings } from "@/context/ListingsContext";
+import { useMessages } from "@/context/MessagesContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, DollarSign, ToggleRight, Star, Package, AlertTriangle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -13,6 +14,7 @@ import { toast } from "sonner";
 
 const ActivityTab = () => {
   const [segment, setSegment] = useState(0);
+  const { sendMessage } = useMessages();
   const { listings } = useListings();
   const { bookings } = useBookings();
   const userListings = listings.filter((l) => l.owner === "You");
@@ -40,6 +42,13 @@ const ActivityTab = () => {
     if (!claimAmount || !claimDescription.trim()) {
       toast.error("Please fill in both the amount and damage description.");
       return;
+    }
+    // Send automatic message to the renter
+    if (claimItem?.otherUser) {
+      sendMessage(
+        claimItem.otherUser,
+        `⚠️ Liability Claim: A damage claim of $${claimAmount} has been submitted for "${claimItem.itemTitle}". Damage description: ${claimDescription}`
+      );
     }
     toast.success(`Liability claim of $${claimAmount} submitted for ${claimItem?.itemTitle}`);
     setClaimOpen(false);
