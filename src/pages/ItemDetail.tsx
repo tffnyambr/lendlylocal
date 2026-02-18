@@ -20,6 +20,7 @@ const ItemDetail = () => {
   const item = listings.find((l) => l.id === id);
   const [saved, setSaved] = useState(item?.saved ?? false);
   const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
+  const [selectedRange, setSelectedRange] = useState<{ start: Date; end: Date | null } | null>(null);
 
   if (!item) {
     return (
@@ -118,7 +119,7 @@ const ItemDetail = () => {
         <section>
           <h2 className="font-display text-base font-semibold text-foreground">Availability</h2>
           <div className="mt-2">
-            <AvailabilityCalendar />
+            <AvailabilityCalendar selectedRange={selectedRange} onSelectRange={setSelectedRange} />
           </div>
         </section>
 
