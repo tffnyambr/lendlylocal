@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useListings } from "@/context/ListingsContext";
-import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, ChevronRight, User } from "lucide-react";
+import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, ChevronRight, User, Truck, MapPinned } from "lucide-react";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -19,6 +19,7 @@ const ItemDetail = () => {
   const { listings } = useListings();
   const item = listings.find((l) => l.id === id);
   const [saved, setSaved] = useState(item?.saved ?? false);
+  const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
 
   if (!item) {
     return (
@@ -31,6 +32,7 @@ const ItemDetail = () => {
   const rentalFee = item.price;
   const serviceFee = Math.round(item.price * 0.12);
   const liabilityFee = Math.round(item.price * 0.5);
+  const transportFee = fulfillment === "delivery" ? 15 : 0;
 
   return (
     <motion.div
@@ -120,6 +122,41 @@ const ItemDetail = () => {
           </div>
         </section>
 
+        {/* Delivery / Pickup Toggle */}
+        <section>
+          <h2 className="font-display text-base font-semibold text-foreground">Fulfillment</h2>
+          <div className="mt-2 flex gap-3">
+            <button
+              onClick={() => setFulfillment("pickup")}
+              className={`flex flex-1 items-center gap-2.5 rounded-2xl p-3.5 transition-colors ${
+                fulfillment === "pickup"
+                  ? "bg-primary/10 ring-1 ring-primary/30"
+                  : "bg-card shadow-card"
+              }`}
+            >
+              <MapPinned size={18} className={fulfillment === "pickup" ? "text-primary" : "text-muted-foreground"} />
+              <div className="text-left">
+                <p className={`text-sm font-medium ${fulfillment === "pickup" ? "text-primary" : "text-foreground"}`}>Pick up</p>
+                <p className="text-[11px] text-muted-foreground">Free · Meet the owner</p>
+              </div>
+            </button>
+            <button
+              onClick={() => setFulfillment("delivery")}
+              className={`flex flex-1 items-center gap-2.5 rounded-2xl p-3.5 transition-colors ${
+                fulfillment === "delivery"
+                  ? "bg-primary/10 ring-1 ring-primary/30"
+                  : "bg-card shadow-card"
+              }`}
+            >
+              <Truck size={18} className={fulfillment === "delivery" ? "text-primary" : "text-muted-foreground"} />
+              <div className="text-left">
+                <p className={`text-sm font-medium ${fulfillment === "delivery" ? "text-primary" : "text-foreground"}`}>Delivery</p>
+                <p className="text-[11px] text-muted-foreground">$15 · To your door</p>
+              </div>
+            </button>
+          </div>
+        </section>
+
         {/* Price Breakdown */}
         <section>
           <h2 className="font-display text-base font-semibold text-foreground">Price Breakdown</h2>
@@ -136,10 +173,16 @@ const ItemDetail = () => {
               <span className="text-muted-foreground">Liability fee</span>
               <span className="text-foreground">${liabilityFee}</span>
             </div>
+            {transportFee > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="flex items-center gap-1 text-muted-foreground"><Truck size={12} /> Transport fee</span>
+                <span className="text-foreground">${transportFee}</span>
+              </div>
+            )}
             <div className="border-t border-border pt-2">
               <div className="flex justify-between text-sm font-bold">
                 <span className="text-foreground">Total</span>
-                <span className="text-primary">${rentalFee + serviceFee + liabilityFee}</span>
+                <span className="text-primary">${rentalFee + serviceFee + liabilityFee + transportFee}</span>
               </div>
             </div>
           </div>
