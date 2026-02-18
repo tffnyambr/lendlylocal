@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, SlidersHorizontal, MapPin, Heart, TrendingUp } from "lucide-react";
 import SegmentedControl from "@/components/SegmentedControl";
 import ItemCard from "@/components/ItemCard";
+import FilterSheet, { type FilterState, defaultFilters } from "@/components/FilterSheet";
 import { categories } from "@/data/mockData";
 import { useListings } from "@/context/ListingsContext";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,7 +11,14 @@ import heroPopular from "@/assets/hero-popular.jpg";
 const HomeTab = () => {
   const [segment, setSegment] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const { listings } = useListings();
+
+  const applyFilters = (f: FilterState) => {
+    setFilters(f);
+    setSelectedCategory(f.category);
+  };
 
   const filtered = selectedCategory
     ? listings.filter((l) => l.category === selectedCategory)
@@ -45,7 +53,7 @@ const HomeTab = () => {
                   className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
                 />
               </div>
-              <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-card">
+              <button onClick={() => setFilterOpen(true)} className="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-card">
                 <SlidersHorizontal size={16} className="text-primary-foreground" />
               </button>
             </div>
@@ -106,6 +114,7 @@ const HomeTab = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <FilterSheet open={filterOpen} onOpenChange={setFilterOpen} onApply={applyFilters} initialFilters={filters} />
     </div>
   );
 };
