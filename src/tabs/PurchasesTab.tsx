@@ -2,16 +2,14 @@ import { useState } from "react";
 import SegmentedControl from "@/components/SegmentedControl";
 import { bookings, listings } from "@/data/mockData";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, MapPin, Minus, Plus, Trash2, Package, Calendar, ArrowDownLeft, ArrowUpRight, Truck } from "lucide-react";
+import { Clock, MapPin, Minus, Plus, Trash2, Package, Calendar, ArrowDownLeft, ArrowUpRight } from "lucide-react";
 
 const PurchasesTab = () => {
   const [segment, setSegment] = useState(0);
   const [days, setDays] = useState(3);
-  const [delivery, setDelivery] = useState(false);
   const rentalFee = listings[3].price * days;
   const serviceFee = Math.round(rentalFee * 0.1);
   const deposit = 50;
-  const transportFee = delivery ? 15 : 0;
 
   return (
     <div className="flex flex-col gap-4 pb-4">
@@ -47,21 +45,6 @@ const PurchasesTab = () => {
               </div>
             </div>
 
-            {/* Delivery option */}
-            <button
-              onClick={() => setDelivery(!delivery)}
-              className={`flex items-center gap-3 rounded-2xl p-4 transition-colors ${delivery ? "bg-primary/10 ring-1 ring-primary/30" : "bg-card shadow-card"}`}
-            >
-              <Truck size={20} className={delivery ? "text-primary" : "text-muted-foreground"} />
-              <div className="flex-1 text-left">
-                <p className="text-sm font-medium text-foreground">Request delivery</p>
-                <p className="text-xs text-muted-foreground">Have the item delivered to you — $15</p>
-              </div>
-              <div className={`h-5 w-9 rounded-full transition-colors ${delivery ? "bg-primary" : "bg-muted"} relative`}>
-                <div className={`absolute top-0.5 h-4 w-4 rounded-full bg-card shadow transition-transform ${delivery ? "translate-x-4.5" : "translate-x-0.5"}`} />
-              </div>
-            </button>
-
             {/* Price breakdown */}
             <div className="rounded-2xl bg-card p-4 shadow-card">
               <h4 className="mb-3 text-sm font-semibold text-foreground">Price Breakdown</h4>
@@ -69,12 +52,9 @@ const PurchasesTab = () => {
                 <div className="flex justify-between"><span className="text-muted-foreground">Rental fee ({days} days)</span><span className="text-foreground">${rentalFee}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Service fee</span><span className="text-foreground">${serviceFee}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Security deposit</span><span className="text-foreground">${deposit}</span></div>
-                {delivery && (
-                  <div className="flex justify-between"><span className="flex items-center gap-1 text-muted-foreground"><Truck size={12} /> Transport fee</span><span className="text-foreground">${transportFee}</span></div>
-                )}
                 <div className="mt-2 border-t border-border pt-2 flex justify-between font-semibold">
                   <span className="text-foreground">Total</span>
-                  <span className="text-primary">${rentalFee + serviceFee + deposit + transportFee}</span>
+                  <span className="text-primary">${rentalFee + serviceFee + deposit}</span>
                 </div>
               </div>
             </div>
