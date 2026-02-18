@@ -10,6 +10,7 @@ import ChatPage from "./pages/ChatPage";
 import NotFound from "./pages/NotFound";
 import { ListingsProvider } from "./context/ListingsContext";
 import { MessagesProvider } from "./context/MessagesContext";
+import { BookingsProvider } from "./context/BookingsContext";
 
 const queryClient = new QueryClient();
 
@@ -20,16 +21,18 @@ const App = () => (
       <Sonner />
       <ListingsProvider>
         <MessagesProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/item/:id" element={<ItemDetail />} />
-              <Route path="/user/:name" element={<UserProfile />} />
-              <Route path="/chat/:name" element={<ChatPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <BookingsProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/item/:id" element={<ItemDetail />} />
+                <Route path="/user/:name" element={<UserProfile />} />
+                <Route path="/chat/:name" element={<ChatPage />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </BookingsProvider>
         </MessagesProvider>
       </ListingsProvider>
     </TooltipProvider>
