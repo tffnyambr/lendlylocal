@@ -13,6 +13,7 @@ const HomeTab = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
+  const [minRating, setMinRating] = useState<number | null>(null);
   const { listings } = useListings();
 
   const applyFilters = (f: FilterState) => {
@@ -20,9 +21,11 @@ const HomeTab = () => {
     setSelectedCategory(f.category);
   };
 
-  const filtered = selectedCategory
-    ? listings.filter((l) => l.category === selectedCategory)
-    : listings;
+  const filtered = listings.filter((l) => {
+    if (selectedCategory && l.category !== selectedCategory) return false;
+    if (minRating && l.rating <= minRating) return false;
+    return true;
+  });
 
   const savedItems = listings.filter((l) => l.saved);
 
@@ -59,7 +62,10 @@ const HomeTab = () => {
             </div>
 
             {/* Hero - Popular Items */}
-            <div className="relative overflow-hidden rounded-2xl">
+            <div
+              className="relative overflow-hidden rounded-2xl cursor-pointer active:scale-[0.98] transition-transform"
+              onClick={() => setMinRating(minRating ? null : 4.5)}
+            >
               <img src={heroPopular} alt="Popular items" className="h-36 w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
               <div className="absolute bottom-3 left-4 right-4">
@@ -69,6 +75,11 @@ const HomeTab = () => {
                 </div>
                 <h2 className="font-display text-lg font-bold text-primary-foreground leading-tight">Popular Items Near You</h2>
               </div>
+              {minRating && (
+                <div className="absolute top-2.5 right-2.5 rounded-full bg-primary px-2.5 py-1 text-[10px] font-semibold text-primary-foreground">
+                  ★ 4.5+
+                </div>
+              )}
             </div>
 
             {/* Categories */}
