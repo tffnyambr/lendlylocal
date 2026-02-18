@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import SegmentedControl from "@/components/SegmentedControl";
 import { bookings } from "@/data/mockData";
 import { useListings } from "@/context/ListingsContext";
@@ -102,7 +103,7 @@ const ActivityTab = () => {
                 <img src={bookings[1].itemImage} alt="" className="h-12 w-12 rounded-xl object-cover" />
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-foreground">{bookings[1].itemTitle}</p>
-                  <p className="flex items-center gap-1 text-xs text-muted-foreground">{bookings[1].otherUser} · <Calendar size={10} /> {bookings[1].startDate}</p>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground"><Link to={`/user/${encodeURIComponent(bookings[1].otherUser)}`} className="font-medium text-primary hover:underline">{bookings[1].otherUser}</Link> · <Calendar size={10} /> {bookings[1].startDate}</p>
                 </div>
                 <div className="flex gap-2">
                   <button className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">Accept</button>

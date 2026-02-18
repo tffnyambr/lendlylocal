@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useListings } from "@/context/ListingsContext";
 import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, Clock, ChevronRight, User } from "lucide-react";
 import { useState } from "react";
@@ -88,7 +88,7 @@ const ItemDetail = () => {
         </div>
 
         {/* Owner */}
-        <div className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
+        <Link to={`/user/${encodeURIComponent(item.owner)}`} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
             <User size={18} className="text-muted-foreground" />
           </div>
@@ -97,7 +97,7 @@ const ItemDetail = () => {
             <p className="text-xs text-muted-foreground">Usually responds within 1 hour</p>
           </div>
           <ChevronRight size={16} className="text-muted-foreground" />
-        </div>
+        </Link>
 
         {/* About This Item */}
         <section>
