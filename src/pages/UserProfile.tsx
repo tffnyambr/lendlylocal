@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useListings } from "@/context/ListingsContext";
 import { ArrowLeft, Star, MapPin, Calendar, Shield, User, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
@@ -85,9 +85,11 @@ const UserProfile = () => {
         </div>
 
         {/* Message Button */}
-        <Button variant="outline" className="w-full rounded-full gap-2">
-          <MessageCircle size={16} />
-          Message {decodedName.split(" ")[0]}
+        <Button variant="outline" className="w-full rounded-full gap-2" asChild>
+          <Link to={`/chat/${encodeURIComponent(decodedName)}`}>
+            <MessageCircle size={16} />
+            Message {decodedName.split(" ")[0]}
+          </Link>
         </Button>
 
         {/* Listings */}

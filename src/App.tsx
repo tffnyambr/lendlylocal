@@ -6,8 +6,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ItemDetail from "./pages/ItemDetail";
 import UserProfile from "./pages/UserProfile";
+import ChatPage from "./pages/ChatPage";
 import NotFound from "./pages/NotFound";
 import { ListingsProvider } from "./context/ListingsContext";
+import { MessagesProvider } from "./context/MessagesContext";
 
 const queryClient = new QueryClient();
 
@@ -17,15 +19,18 @@ const App = () => (
       <Toaster />
       <Sonner />
       <ListingsProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/item/:id" element={<ItemDetail />} />
-            <Route path="/user/:name" element={<UserProfile />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <MessagesProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/item/:id" element={<ItemDetail />} />
+              <Route path="/user/:name" element={<UserProfile />} />
+              <Route path="/chat/:name" element={<ChatPage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </MessagesProvider>
       </ListingsProvider>
     </TooltipProvider>
   </QueryClientProvider>
