@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface AvailabilityCalendarProps {
   bookedDates?: Date[];
+  selectedRange?: { start: Date; end: Date | null } | null;
+  onSelectRange?: (range: { start: Date; end: Date | null } | null) => void;
 }
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -43,6 +45,8 @@ const defaultBookedDates: Date[] = [
 
 const AvailabilityCalendar = ({
   bookedDates = defaultBookedDates,
+  selectedRange = null,
+  onSelectRange,
 }: AvailabilityCalendarProps) => {
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
@@ -102,6 +106,49 @@ const AvailabilityCalendar = ({
     );
   };
 
+  const handleSelect = (day: number) => {
+    if (isPast(day) || isBooked(day) || !onSelectRange) return;
+    const date = new Date(viewYear, viewMonth, day);
+
+    if (!selectedRange || (selectedRange.start && selectedRange.end)) {
+      // Start a new selection
+      onSelectRange({ start: date, end: null });
+    } else {
+      // Complete the range
+      const start = selectedRange.start;
+      if (date < start) {
+        onSelectRange({ start: date, end: start });
+      } else if (isSameDay(date, start)) {
+        onSelectRange({ start: date, end: date });
+      } else {
+        // Check no booked dates fall within range
+        const hasBookedInRange = bookedDates.some((b) => b > start && b < date);
+        if (hasBookedInRange) {
+          // Restart selection at clicked date
+          onSelectRange({ start: date, end: null });
+        } else {
+          onSelectRange({ start, end: date });
+        }
+      }
+    }
+  };
+
+  const isInRange = (day: number) => {
+    if (!selectedRange || !selectedRange.end) return false;
+    const date = new Date(viewYear, viewMonth, day);
+    return date >= selectedRange.start && date <= selectedRange.end;
+  };
+
+  const isRangeStart = (day: number) => {
+    if (!selectedRange) return false;
+    return isSameDay(new Date(viewYear, viewMonth, day), selectedRange.start);
+  };
+
+  const isRangeEnd = (day: number) => {
+    if (!selectedRange?.end) return false;
+    return isSameDay(new Date(viewYear, viewMonth, day), selectedRange.end);
+  };
+
   const cells: (number | null)[] = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
@@ -148,20 +195,33 @@ const AvailabilityCalendar = ({
           const booked = isBooked(day);
           const past = isPast(day);
           const todayMark = isToday(day);
+          const inRange = isInRange(day);
+          const rangeStart = isRangeStart(day);
+          const rangeEnd = isRangeEnd(day);
+          const selectable = !past && !booked && !!onSelectRange;
 
           return (
-            <div
+            <button
               key={day}
+              type="button"
+              disabled={!selectable}
+              onClick={() => handleSelect(day)}
               className={`flex h-9 items-center justify-center rounded-lg text-xs font-medium transition-colors ${
-                past
+                rangeStart || rangeEnd
+                  ? "bg-primary text-primary-foreground"
+                  : inRange
+                  ? "bg-primary/15 text-primary"
+                  : past
                   ? "text-muted-foreground/40"
                   : booked
                   ? "bg-destructive/15 text-destructive"
                   : "bg-[hsl(var(--success)/0.1)] text-[hsl(var(--success))]"
-              } ${todayMark ? "ring-1 ring-primary ring-offset-1 ring-offset-background" : ""}`}
+              } ${todayMark && !rangeStart && !rangeEnd ? "ring-1 ring-primary ring-offset-1 ring-offset-background" : ""} ${
+                selectable ? "cursor-pointer active:scale-95" : "cursor-default"
+              }`}
             >
               {day}
-            </div>
+            </button>
           );
         })}
       </div>
@@ -175,6 +235,10 @@ const AvailabilityCalendar = ({
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-destructive/30" />
           <span className="text-[11px] text-muted-foreground">Booked</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="h-2.5 w-2.5 rounded-full bg-primary" />
+          <span className="text-[11px] text-muted-foreground">Selected</span>
         </div>
       </div>
     </div>
