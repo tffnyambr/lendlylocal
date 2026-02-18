@@ -1,6 +1,6 @@
 import { Home, MessageCircle, RefreshCw, ShoppingCart, User } from "lucide-react";
 import { motion } from "framer-motion";
-import { messages } from "@/data/mockData";
+import { useMessages } from "@/context/MessagesContext";
 
 const tabs = [
   { id: "home", label: "Home", icon: Home },
@@ -18,7 +18,8 @@ interface BottomNavProps {
 }
 
 const BottomNav = ({ active, onChange }: BottomNavProps) => {
-  const unreadCount = messages.reduce((sum, m) => sum + m.unread, 0);
+  const { threads } = useMessages();
+  const unreadCount = threads.reduce((sum, m) => sum + m.unread, 0);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-card/95 backdrop-blur-md safe-bottom">
