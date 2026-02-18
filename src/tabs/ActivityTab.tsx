@@ -4,7 +4,12 @@ import SegmentedControl from "@/components/SegmentedControl";
 import { useBookings } from "@/context/BookingsContext";
 import { useListings } from "@/context/ListingsContext";
 import { AnimatePresence, motion } from "framer-motion";
-import { Calendar, DollarSign, ToggleRight, Star, Package } from "lucide-react";
+import { Calendar, DollarSign, ToggleRight, Star, Package, AlertTriangle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const ActivityTab = () => {
   const [segment, setSegment] = useState(0);
@@ -14,6 +19,31 @@ const ActivityTab = () => {
   const pendingRentals = bookings.filter((b) => b.status === "pending");
   const activeRentals = bookings.filter((b) => b.status === "active");
   const completedRentals = bookings.filter((b) => b.status === "completed");
+
+  // Past lent items (completed bookings from lending perspective)
+  const pastLentItems = bookings.filter((b) => b.status === "completed");
+
+  // Liability claim dialog state
+  const [claimOpen, setClaimOpen] = useState(false);
+  const [claimItem, setClaimItem] = useState<typeof bookings[0] | null>(null);
+  const [claimAmount, setClaimAmount] = useState("");
+  const [claimDescription, setClaimDescription] = useState("");
+
+  const handleOpenClaim = (booking: typeof bookings[0]) => {
+    setClaimItem(booking);
+    setClaimAmount("");
+    setClaimDescription("");
+    setClaimOpen(true);
+  };
+
+  const handleSubmitClaim = () => {
+    if (!claimAmount || !claimDescription.trim()) {
+      toast.error("Please fill in both the amount and damage description.");
+      return;
+    }
+    toast.success(`Liability claim of $${claimAmount} submitted for ${claimItem?.itemTitle}`);
+    setClaimOpen(false);
+  };
 
   return (
     <div className="flex flex-col gap-4 pb-4">
@@ -138,9 +168,73 @@ const ActivityTab = () => {
                 ))}
               </>
             )}
+
+            {/* Past Lent Items */}
+            {pastLentItems.length > 0 && (
+              <>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Past Lent Items</h3>
+                {pastLentItems.map((booking) => (
+                  <div key={`past-${booking.id}`} className="rounded-2xl bg-card p-4 shadow-card">
+                    <div className="flex items-center gap-3">
+                      <img src={booking.itemImage} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                      <div className="flex-1">
+                        <h4 className="text-sm font-semibold text-foreground">{booking.itemTitle}</h4>
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar size={10} /> {booking.startDate} – {booking.endDate}
+                        </p>
+                        <span className="mt-1 inline-block rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">Completed</span>
+                      </div>
+                      <button
+                        onClick={() => handleOpenClaim(booking)}
+                        className="flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1.5 text-xs font-semibold text-destructive transition-colors hover:bg-destructive/20"
+                      >
+                        <AlertTriangle size={12} />
+                        Claim Liability
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Liability Claim Dialog */}
+      <Dialog open={claimOpen} onOpenChange={setClaimOpen}>
+        <DialogContent className="rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>Claim Liability</DialogTitle>
+            <DialogDescription>
+              Submit a damage claim for <span className="font-semibold text-foreground">{claimItem?.itemTitle}</span> rented by {claimItem?.otherUser}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 pt-2">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Claim Amount ($)</label>
+              <Input
+                type="number"
+                placeholder="e.g. 50"
+                value={claimAmount}
+                onChange={(e) => setClaimAmount(e.target.value)}
+                min={0}
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Damage Description</label>
+              <Textarea
+                placeholder="Describe the damage in detail..."
+                value={claimDescription}
+                onChange={(e) => setClaimDescription(e.target.value)}
+                rows={4}
+              />
+            </div>
+            <Button onClick={handleSubmitClaim} className="w-full">
+              Submit Claim
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
