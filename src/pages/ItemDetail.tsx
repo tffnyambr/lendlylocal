@@ -1,10 +1,13 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useListings } from "@/context/ListingsContext";
+import { useBookings } from "@/context/BookingsContext";
 import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, ChevronRight, User, Truck, MapPinned } from "lucide-react";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { toast } from "sonner";
 
 const reviews = [
   { id: 1, user: "Emily R.", rating: 5, date: "Jan 2026", comment: "Excellent condition, exactly as described. Would rent again!" },
@@ -17,6 +20,7 @@ const ItemDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { listings } = useListings();
+  const { addBooking } = useBookings();
   const item = listings.find((l) => l.id === id);
   const [saved, setSaved] = useState(item?.saved ?? false);
   const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
@@ -247,7 +251,26 @@ const ItemDetail = () => {
             <span className="text-lg font-bold text-primary">${item.price}</span>
             <span className="text-xs text-muted-foreground">/day</span>
           </div>
-          <Button className="rounded-full px-6 text-sm font-semibold shadow-card">
+          <Button
+            className="rounded-full px-6 text-sm font-semibold shadow-card"
+            onClick={() => {
+              if (!selectedRange?.start || !selectedRange?.end) {
+                toast.error("Please select rental dates first");
+                return;
+              }
+              addBooking({
+                itemTitle: item.title,
+                itemImage: item.image,
+                otherUser: item.owner,
+                status: "pending",
+                startDate: format(selectedRange.start, "MMM d"),
+                endDate: format(selectedRange.end, "MMM d"),
+                price: rentalFee + serviceFee + liabilityFee + transportFee,
+              });
+              toast.success("Rental request sent!");
+              navigate("/?tab=activity");
+            }}
+          >
             Request to Rent
           </Button>
         </div>
