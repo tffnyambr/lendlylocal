@@ -33,7 +33,7 @@ const ChatPage = () => {
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-border bg-card p-4">
         <button
-          onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/"))}
+          onClick={() => navigate("/?tab=comms")}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary"
         >
           <ArrowLeft size={18} className="text-foreground" />
