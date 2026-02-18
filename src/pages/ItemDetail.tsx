@@ -48,7 +48,7 @@ const ItemDetail = () => {
         <img src={item.image} alt={item.title} className="h-80 w-full object-cover" />
         <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/"))}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-card/80 backdrop-blur-sm"
           >
             <ArrowLeft size={18} className="text-foreground" />
