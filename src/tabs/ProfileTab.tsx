@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Package, Settings, Shield, Star, User } from "lucide-react";
+import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 
 const stats = [
   { label: "Earnings", value: "$1,240" },
@@ -27,6 +29,10 @@ const ProfileTab = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() =>
+    document.documentElement.classList.contains("dark")
+  );
 
   useEffect(() => {
     if (user) {
@@ -90,6 +96,12 @@ const ProfileTab = () => {
   const handleSignOut = async () => {
     await signOut();
     toast.success("Signed out successfully");
+  };
+
+  const toggleDarkMode = (checked: boolean) => {
+    setDarkMode(checked);
+    document.documentElement.classList.toggle("dark", checked);
+    localStorage.setItem("theme", checked ? "dark" : "light");
   };
 
   return (
@@ -159,9 +171,11 @@ const ProfileTab = () => {
       <div className="rounded-2xl bg-card shadow-card overflow-hidden">
         {menuItems.map((item, i) => {
           const Icon = item.icon;
+          const isSettings = item.label === "Settings";
           return (
             <button
               key={item.label}
+              onClick={isSettings ? () => setSettingsOpen(true) : undefined}
               className={`flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary ${
                 i < menuItems.length - 1 ? "border-b border-border" : ""
               }`}
@@ -173,6 +187,22 @@ const ProfileTab = () => {
           );
         })}
       </div>
+
+      {/* Settings Sheet */}
+      <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
+        <SheetContent side="bottom" className="rounded-t-3xl px-6 pb-8">
+          <SheetTitle className="font-display text-lg font-bold text-foreground">Settings</SheetTitle>
+          <div className="mt-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between rounded-2xl bg-secondary p-4">
+              <div className="flex items-center gap-3">
+                {darkMode ? <Moon size={18} className="text-muted-foreground" /> : <Sun size={18} className="text-muted-foreground" />}
+                <span className="text-sm font-medium text-foreground">Dark Mode</span>
+              </div>
+              <Switch checked={darkMode} onCheckedChange={toggleDarkMode} />
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Logout */}
       <button
