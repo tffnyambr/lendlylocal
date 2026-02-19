@@ -22,7 +22,7 @@ const ListItemFAB = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [deposit, setDeposit] = useState("");
-  const [liability, setLiability] = useState("");
+  
   const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
@@ -54,7 +54,7 @@ const ListItemFAB = () => {
     setDescription("");
     setPrice("");
     setDeposit("");
-    setLiability("");
+    
     setDiscount("");
     setCategory("");
     setLocation("");
@@ -226,32 +226,18 @@ const ListItemFAB = () => {
               </div>
             </div>
 
-            {/* Liability Fee & Discount */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="mb-1.5 block text-xs font-semibold text-foreground">
-                  Liability Fee
-                </label>
-                <input
-                  type="number"
-                  value={liability}
-                  onChange={(e) => setLiability(e.target.value)}
-                  placeholder="$0"
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className="mb-1.5 block text-xs font-semibold text-foreground">
-                  Discount %
-                </label>
-                <input
-                  type="number"
-                  value={discount}
-                  onChange={(e) => setDiscount(e.target.value)}
-                  placeholder="0%"
-                  className={inputClass}
-                />
-              </div>
+            {/* Discount */}
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold text-foreground">
+                Discount %
+              </label>
+              <input
+                type="number"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                placeholder="0%"
+                className={inputClass}
+              />
             </div>
 
             {/* Location */}
