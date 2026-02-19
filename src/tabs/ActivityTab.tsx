@@ -425,14 +425,26 @@ const ActivityTab = () => {
 
               {/* Action button */}
               <div className="mt-6 px-6">
-                <Link
-                  to={`/chat/${encodeURIComponent(detailBooking.otherUser)}`}
-                  onClick={() => setDetailBooking(null)}
-                >
-                  <Button className="w-full" variant="outline">
-                    Message {detailBooking.otherUser}
-                  </Button>
-                </Link>
+                {detailPerspective === "renting" && detailBooking.status === "completed" ? (
+                  <Link
+                    to={`/item/${encodeURIComponent(detailBooking.itemTitle)}`}
+                    onClick={() => setDetailBooking(null)}
+                  >
+                    <Button className="w-full" variant="outline">
+                      <Package size={16} className="mr-2" />
+                      View Listing
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link
+                    to={`/chat/${encodeURIComponent(detailBooking.otherUser)}`}
+                    onClick={() => setDetailBooking(null)}
+                  >
+                    <Button className="w-full" variant="outline">
+                      Message {detailBooking.otherUser}
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
           )}
