@@ -164,7 +164,6 @@ const ActivityTab = () => {
                       <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
                       <p className="text-xs text-muted-foreground">${item.price}/day</p>
                     </div>
-                    <ToggleRight size={24} className="text-success" />
                   </div>
                   <div className="mt-2 flex gap-2 justify-end">
                     <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
@@ -181,7 +180,7 @@ const ActivityTab = () => {
                       <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
                       <p className="text-xs text-muted-foreground">${item.price}/day</p>
                     </div>
-                    <ToggleRight size={24} className="text-success" />
+                    
                   </div>
                   <div className="mt-2 flex gap-2 justify-end">
                     <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
