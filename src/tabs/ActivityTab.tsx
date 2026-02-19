@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { logActivity } from "@/lib/activityLogger";
-import type { BookingItem } from "@/data/mockData";
+import type { BookingItem, ListingItem } from "@/data/mockData";
+import { MapPin } from "lucide-react";
 
 const ActivityTab = () => {
   const [segment, setSegment] = useState(0);
@@ -43,6 +44,9 @@ const ActivityTab = () => {
   const [claimItem, setClaimItem] = useState<typeof bookings[0] | null>(null);
   const [claimAmount, setClaimAmount] = useState("");
   const [claimDescription, setClaimDescription] = useState("");
+
+  // Listing detail sheet state
+  const [detailListing, setDetailListing] = useState<ListingItem | null>(null);
 
   const handleOpenClaim = (booking: typeof bookings[0]) => {
     setClaimItem(booking);
@@ -153,7 +157,7 @@ const ActivityTab = () => {
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your Listings</h3>
             {userListings.length > 0 ? (
               userListings.map((item) => (
-                <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
+                <div key={item.id} className="cursor-pointer flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailListing(item)}>
                   <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
                   <div className="flex-1">
                     <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
@@ -164,7 +168,7 @@ const ActivityTab = () => {
               ))
             ) : (
               listings.slice(0, 3).map((item) => (
-                <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
+                <div key={item.id} className="cursor-pointer flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailListing(item)}>
                   <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
                   <div className="flex-1">
                     <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
@@ -364,6 +368,115 @@ const ActivityTab = () => {
                 >
                   <Button className="w-full" variant="outline">
                     Message {detailBooking.otherUser}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+      {/* Listing Detail Sheet */}
+      <Sheet open={!!detailListing} onOpenChange={(open) => !open && setDetailListing(null)}>
+        <SheetContent side="bottom" className="rounded-t-3xl px-0 pb-8">
+          {detailListing && (
+            <div className="flex flex-col">
+              {/* Hero image */}
+              <div className="relative mx-4 overflow-hidden rounded-2xl">
+                <img
+                  src={detailListing.image}
+                  alt={detailListing.title}
+                  className="h-48 w-full object-cover"
+                />
+                <div className="absolute bottom-3 left-3">
+                  <span className="rounded-full bg-success/90 px-3 py-1 text-xs font-semibold text-success-foreground">
+                    Active Listing
+                  </span>
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="px-6 pt-4">
+                <SheetHeader className="text-left">
+                  <SheetTitle className="text-lg font-bold text-foreground">
+                    {detailListing.title}
+                  </SheetTitle>
+                </SheetHeader>
+              </div>
+
+              {/* Details */}
+              <div className="mt-4 flex flex-col gap-3 px-6">
+                {/* Owner */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <User size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Listed by</p>
+                    <p className="text-sm font-semibold text-foreground">You</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Price */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <DollarSign size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Daily rate</p>
+                    <p className="text-sm font-semibold text-foreground">${detailListing.price.toFixed(2)}/day</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Rating */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <Star size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Rating</p>
+                    <p className="text-sm font-semibold text-foreground">{detailListing.rating > 0 ? detailListing.rating : "No ratings yet"}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Location */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <MapPin size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Location</p>
+                    <p className="text-sm font-semibold text-foreground">{detailListing.location}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Category */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <Package size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Category</p>
+                    <p className="text-sm font-semibold capitalize text-foreground">{detailListing.category}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action button */}
+              <div className="mt-6 px-6">
+                <Link
+                  to={`/item/${detailListing.id}`}
+                  onClick={() => setDetailListing(null)}
+                >
+                  <Button className="w-full" variant="outline">
+                    View Listing
                   </Button>
                 </Link>
               </div>
