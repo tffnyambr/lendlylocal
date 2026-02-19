@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { logActivity } from "@/lib/activityLogger";
 
 const ActivityTab = () => {
   const [segment, setSegment] = useState(0);
@@ -50,6 +51,12 @@ const ActivityTab = () => {
         `⚠️ Liability Claim: A damage claim of $${claimAmount} has been submitted for "${claimItem.itemTitle}". Damage description: ${claimDescription}`
       );
     }
+    logActivity("liability_claim", {
+      item: claimItem?.itemTitle,
+      otherUser: claimItem?.otherUser,
+      amount: claimAmount,
+      description: claimDescription,
+    });
     toast.success(`Liability claim of $${claimAmount} submitted for ${claimItem?.itemTitle}`);
     setClaimOpen(false);
   };

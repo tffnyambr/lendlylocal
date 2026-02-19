@@ -1,4 +1,6 @@
 import { BadgeCheck, ChevronRight, CreditCard, HelpCircle, LogOut, Package, Settings, Shield, Star, User } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const stats = [
   { label: "Earnings", value: "$1,240" },
@@ -17,6 +19,14 @@ const menuItems = [
 ];
 
 const ProfileTab = () => {
+  const { user, signOut } = useAuth();
+  const displayName = user?.user_metadata?.display_name || user?.email || "User";
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Signed out successfully");
+  };
+
   return (
     <div className="flex flex-col gap-5 pb-4">
       <h1 className="font-display text-2xl font-bold text-foreground">Profile</h1>
@@ -32,8 +42,8 @@ const ProfileTab = () => {
           </div>
         </div>
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-foreground">Alex Johnson</h2>
-          <p className="text-xs text-muted-foreground">Member since 2024</p>
+          <h2 className="text-lg font-semibold text-foreground">{displayName}</h2>
+          <p className="text-xs text-muted-foreground">{user?.email}</p>
         </div>
         <div className="flex items-center gap-1">
           {[1, 2, 3, 4, 5].map((i) => (
@@ -73,7 +83,10 @@ const ProfileTab = () => {
       </div>
 
       {/* Logout */}
-      <button className="flex items-center justify-center gap-2 rounded-full bg-destructive/10 py-3 text-sm font-semibold text-destructive transition-transform active:scale-[0.98]">
+      <button
+        onClick={handleSignOut}
+        className="flex items-center justify-center gap-2 rounded-full bg-destructive/10 py-3 text-sm font-semibold text-destructive transition-transform active:scale-[0.98]"
+      >
         <LogOut size={16} />
         <span>Log Out</span>
       </button>
