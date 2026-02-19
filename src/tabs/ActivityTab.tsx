@@ -147,25 +147,25 @@ const ActivityTab = () => {
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your Listings</h3>
             {userListings.length > 0 ? (
               userListings.map((item) => (
-                <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
+                <Link key={item.id} to={`/item/${item.id}`} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50">
                   <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
                   <div className="flex-1">
                     <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
                     <p className="text-xs text-muted-foreground">${item.price}/day</p>
                   </div>
                   <ToggleRight size={24} className="text-success" />
-                </div>
+                </Link>
               ))
             ) : (
               listings.slice(0, 3).map((item) => (
-                <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card">
+                <Link key={item.id} to={`/item/${item.id}`} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50">
                   <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
                   <div className="flex-1">
                     <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
                     <p className="text-xs text-muted-foreground">${item.price}/day</p>
                   </div>
                   <ToggleRight size={24} className="text-success" />
-                </div>
+                </Link>
               ))
             )}
 
@@ -174,16 +174,16 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Requests</h3>
                 {pendingRentals.map((booking) => (
-                  <div key={booking.id} className="rounded-2xl bg-card p-4 shadow-card">
+                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailBooking(booking)}>
                     <div className="flex items-center gap-3">
                       <img src={booking.itemImage} alt="" className="h-12 w-12 rounded-xl object-cover" />
                       <div className="flex-1">
                         <p className="text-sm font-semibold text-foreground">{booking.itemTitle}</p>
-                        <p className="flex items-center gap-1 text-xs text-muted-foreground"><Link to={`/user/${encodeURIComponent(booking.otherUser)}`} className="font-medium text-primary hover:underline">{booking.otherUser}</Link> · <Calendar size={10} /> {booking.startDate}</p>
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground"><Link to={`/user/${encodeURIComponent(booking.otherUser)}`} className="font-medium text-primary hover:underline" onClick={(e) => e.stopPropagation()}>{booking.otherUser}</Link> · <Calendar size={10} /> {booking.startDate}</p>
                       </div>
                       <div className="flex gap-2">
-                        <button className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">Accept</button>
-                        <button className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Decline</button>
+                        <button className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success" onClick={(e) => e.stopPropagation()}>Accept</button>
+                        <button className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive" onClick={(e) => e.stopPropagation()}>Decline</button>
                       </div>
                     </div>
                   </div>
@@ -196,7 +196,7 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Past Lent Items</h3>
                 {pastLentItems.map((booking) => (
-                  <div key={`past-${booking.id}`} className="rounded-2xl bg-card p-4 shadow-card">
+                  <div key={`past-${booking.id}`} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailBooking(booking)}>
                     <div className="flex items-center gap-3">
                       <img src={booking.itemImage} alt="" className="h-14 w-14 rounded-xl object-cover" />
                       <div className="flex-1">
@@ -207,7 +207,7 @@ const ActivityTab = () => {
                         <span className="mt-1 inline-block rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">Completed</span>
                       </div>
                       <button
-                        onClick={() => handleOpenClaim(booking)}
+                        onClick={(e) => { e.stopPropagation(); handleOpenClaim(booking); }}
                         className="flex items-center gap-1.5 rounded-full bg-destructive/10 px-3 py-1.5 text-xs font-semibold text-destructive transition-colors hover:bg-destructive/20"
                       >
                         <AlertTriangle size={12} />
@@ -299,7 +299,7 @@ const ActivityTab = () => {
                     <User size={16} className="text-muted-foreground" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs text-muted-foreground">Rented from</p>
+                    <p className="text-xs text-muted-foreground">{segment === 0 ? "Rented from" : "Rented by"}</p>
                     <Link
                       to={`/user/${encodeURIComponent(detailBooking.otherUser)}`}
                       className="text-sm font-semibold text-primary hover:underline"
