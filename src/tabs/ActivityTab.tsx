@@ -5,7 +5,7 @@ import { useBookings } from "@/context/BookingsContext";
 import { useListings } from "@/context/ListingsContext";
 import { useMessages } from "@/context/MessagesContext";
 import { AnimatePresence, motion } from "framer-motion";
-import { Calendar, DollarSign, ToggleRight, Star, Package, AlertTriangle, Clock, User } from "lucide-react";
+import { Calendar, DollarSign, ToggleRight, Star, Package, AlertTriangle, Clock, User, ChevronDown } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,7 @@ import { MapPin } from "lucide-react";
 const ActivityTab = () => {
   const [segment, setSegment] = useState(0);
   const { sendMessage } = useMessages();
-  const { listings } = useListings();
+  const { listings, removedListings, removeListing } = useListings();
   const { bookings } = useBookings();
   const userListings = listings.filter((l) => l.owner === "You");
   const pendingRentals = bookings.filter((b) => b.status === "pending");
@@ -47,6 +47,7 @@ const ActivityTab = () => {
 
   // Listing detail sheet state
   const [detailListing, setDetailListing] = useState<ListingItem | null>(null);
+  const [removedOpen, setRemovedOpen] = useState(false);
 
   const handleOpenClaim = (booking: typeof bookings[0]) => {
     setClaimItem(booking);
@@ -166,7 +167,7 @@ const ActivityTab = () => {
                     </div>
                     <div className="flex gap-2">
                       <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
-                      <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                      <button onClick={(e) => { e.stopPropagation(); removeListing(item.id); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
                     </div>
                   </div>
                 </div>
@@ -182,7 +183,7 @@ const ActivityTab = () => {
                     </div>
                     <div className="flex gap-2">
                       <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
-                      <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                      <button onClick={(e) => { e.stopPropagation(); removeListing(item.id); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
                     </div>
                   </div>
                 </div>
@@ -237,6 +238,45 @@ const ActivityTab = () => {
                   </div>
                 ))}
               </>
+            )}
+
+            {/* Removed Items */}
+            {removedListings.length > 0 && (
+              <div>
+                <button
+                  onClick={() => setRemovedOpen(!removedOpen)}
+                  className="flex w-full items-center justify-between py-2"
+                >
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Removed Items ({removedListings.length})
+                  </h3>
+                  <ChevronDown
+                    size={16}
+                    className={`text-muted-foreground transition-transform ${removedOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                <AnimatePresence>
+                  {removedOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="flex flex-col gap-3 overflow-hidden"
+                    >
+                      {removedListings.map((item) => (
+                        <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card opacity-60">
+                          <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                          <div className="flex-1">
+                            <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+                            <p className="text-xs text-muted-foreground">${item.price}/day</p>
+                          </div>
+                          <span className="rounded-full bg-destructive/15 px-2.5 py-0.5 text-[10px] font-semibold text-destructive">Removed</span>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             )}
           </motion.div>
         )}
