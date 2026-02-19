@@ -64,9 +64,11 @@ export const MessagesProvider = ({ children }: { children: ReactNode }) => {
     setThreads((prev) => {
       const existing = prev.find((t) => t.userName === userName);
       if (existing) {
-        return prev.map((t) =>
-          t.userName === userName ? { ...t, lastMessage: text, time: "now", unread: 0 } : t
-        );
+        return prev
+          .map((t) =>
+            t.userName === userName ? { ...t, lastMessage: text, time: "now", unread: 0 } : t
+          )
+          .sort((a, b) => (a.userName === userName ? -1 : b.userName === userName ? 1 : 0));
       }
       return [
         {
