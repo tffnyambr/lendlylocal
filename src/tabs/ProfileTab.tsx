@@ -1,13 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Package, Settings, Shield, Star, User, Sun, Moon } from "lucide-react";
+import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Package, Settings, Shield, Star, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import { useTheme } from "next-themes";
 
 const stats = [
   { label: "Earnings", value: "$1,240" },
@@ -27,12 +23,10 @@ const menuItems = [
 
 const ProfileTab = () => {
   const { user, signOut } = useAuth();
-  const { theme, setTheme } = useTheme();
   const displayName = user?.user_metadata?.display_name || user?.email || "User";
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -168,7 +162,6 @@ const ProfileTab = () => {
           return (
             <button
               key={item.label}
-              onClick={item.label === "Settings" ? () => setSettingsOpen(true) : undefined}
               className={`flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary ${
                 i < menuItems.length - 1 ? "border-b border-border" : ""
               }`}
@@ -189,35 +182,6 @@ const ProfileTab = () => {
         <LogOut size={16} />
         <span>Log Out</span>
       </button>
-      {/* Settings Sheet */}
-      <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <SheetContent side="bottom" className="rounded-t-3xl">
-          <SheetHeader className="text-left">
-            <SheetTitle>Settings</SheetTitle>
-          </SheetHeader>
-          <div className="mt-4 flex flex-col gap-4">
-            {/* Theme toggle */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                {theme === "dark" ? (
-                  <Moon size={18} className="text-muted-foreground" />
-                ) : (
-                  <Sun size={18} className="text-muted-foreground" />
-                )}
-                <div>
-                  <p className="text-sm font-medium text-foreground">Dark Mode</p>
-                  <p className="text-xs text-muted-foreground">Switch between light and dark theme</p>
-                </div>
-              </div>
-              <Switch
-                checked={theme === "dark"}
-                onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-              />
-            </div>
-            <Separator />
-          </div>
-        </SheetContent>
-      </Sheet>
     </div>
   );
 };
