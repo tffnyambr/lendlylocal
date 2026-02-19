@@ -12,6 +12,7 @@ interface MessagesContextValue {
   threads: MessageThread[];
   getChat: (userName: string) => ChatMessage[];
   sendMessage: (userName: string, text: string) => void;
+  markAsRead: (userName: string) => void;
 }
 
 const MessagesContext = createContext<MessagesContextValue | null>(null);
@@ -81,8 +82,14 @@ export const MessagesProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const markAsRead = (userName: string) => {
+    setThreads((prev) =>
+      prev.map((t) => (t.userName === userName ? { ...t, unread: 0 } : t))
+    );
+  };
+
   return (
-    <MessagesContext.Provider value={{ threads, getChat, sendMessage }}>
+    <MessagesContext.Provider value={{ threads, getChat, sendMessage, markAsRead }}>
       {children}
     </MessagesContext.Provider>
   );
