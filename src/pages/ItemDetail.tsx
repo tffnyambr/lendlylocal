@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { logActivity } from "@/lib/activityLogger";
 
 const reviews = [
   { id: 1, user: "Emily R.", rating: 5, date: "Jan 2026", comment: "Excellent condition, exactly as described. Would rent again!" },
@@ -263,6 +264,13 @@ const ItemDetail = () => {
                 itemImage: item.image,
                 otherUser: item.owner,
                 status: "pending",
+                startDate: format(selectedRange.start, "MMM d"),
+                endDate: format(selectedRange.end, "MMM d"),
+                price: rentalFee + serviceFee + liabilityFee + transportFee,
+              });
+              logActivity("rental_request", {
+                item: item.title,
+                owner: item.owner,
                 startDate: format(selectedRange.start, "MMM d"),
                 endDate: format(selectedRange.end, "MMM d"),
                 price: rentalFee + serviceFee + liabilityFee + transportFee,
