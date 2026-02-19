@@ -123,19 +123,32 @@ const ActivityTab = () => {
               </>
             )}
 
-            {/* Review prompt for completed */}
-            {completedRentals.map((booking) => (
-              <div key={booking.id} className="cursor-pointer rounded-2xl bg-primary/5 p-4 transition-colors active:bg-primary/10" onClick={() => openDetail(booking, "renting")}>
-                <div className="flex items-center gap-3">
-                  <Star size={18} className="text-primary" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground">Leave a review</p>
-                    <p className="text-xs text-muted-foreground">Rate your rental of {booking.itemTitle}</p>
+            {/* Past Rented Items */}
+            {completedRentals.length > 0 && (
+              <>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Past Rented Items</h3>
+                {completedRentals.map((booking) => (
+                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "renting")}>
+                    <div className="flex items-start gap-3">
+                      <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                      <div className="flex-1">
+                        <h3 className="text-sm font-semibold text-foreground">{booking.itemTitle}</h3>
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <User size={10} /> {booking.otherUser}
+                        </p>
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar size={10} /> {booking.startDate} – {booking.endDate}
+                        </p>
+                        <div className="mt-1.5 flex items-center gap-2">
+                          <span className="text-xs font-semibold text-foreground">${booking.price}</span>
+                          <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">Completed</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground" onClick={(e) => e.stopPropagation()}>Review</button>
-                </div>
-              </div>
-            ))}
+                ))}
+              </>
+            )}
 
             {activeRentals.length === 0 && pendingRentals.length === 0 && completedRentals.length === 0 && (
               <p className="py-8 text-center text-sm text-muted-foreground">No rental activity yet</p>
