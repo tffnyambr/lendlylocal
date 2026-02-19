@@ -427,11 +427,10 @@ const ActivityTab = () => {
               <div className="mt-6 px-6">
                 {detailPerspective === "renting" && detailBooking.status === "completed" ? (
                   <Link
-                    to={`/item/${encodeURIComponent(detailBooking.itemTitle)}`}
+                    to={`/item/${listings.find(l => l.title === detailBooking.itemTitle)?.id ?? ""}`}
                     onClick={() => setDetailBooking(null)}
                   >
                     <Button className="w-full" variant="outline">
-                      <Package size={16} className="mr-2" />
                       View Listing
                     </Button>
                   </Link>
