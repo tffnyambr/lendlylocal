@@ -31,6 +31,12 @@ const ActivityTab = () => {
 
   // Rental detail sheet state
   const [detailBooking, setDetailBooking] = useState<BookingItem | null>(null);
+  const [detailPerspective, setDetailPerspective] = useState<"renting" | "lending">("renting");
+
+  const openDetail = (booking: BookingItem, perspective: "renting" | "lending") => {
+    setDetailBooking(booking);
+    setDetailPerspective(perspective);
+  };
 
   // Liability claim dialog state
   const [claimOpen, setClaimOpen] = useState(false);
@@ -77,7 +83,7 @@ const ActivityTab = () => {
           <motion.div key="renting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3">
             {/* Active rentals */}
             {activeRentals.map((booking) => (
-              <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailBooking(booking)}>
+              <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "renting")}>
                 <div className="flex items-start gap-3">
                   <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
                   <div className="flex-1">
@@ -96,7 +102,7 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Requests</h3>
                 {pendingRentals.map((booking) => (
-                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailBooking(booking)}>
+                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "renting")}>
                     <div className="flex items-start gap-3">
                       <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
                       <div className="flex-1">
@@ -114,7 +120,7 @@ const ActivityTab = () => {
 
             {/* Review prompt for completed */}
             {completedRentals.map((booking) => (
-              <div key={booking.id} className="cursor-pointer rounded-2xl bg-primary/5 p-4 transition-colors active:bg-primary/10" onClick={() => setDetailBooking(booking)}>
+              <div key={booking.id} className="cursor-pointer rounded-2xl bg-primary/5 p-4 transition-colors active:bg-primary/10" onClick={() => openDetail(booking, "renting")}>
                 <div className="flex items-center gap-3">
                   <Star size={18} className="text-primary" />
                   <div className="flex-1">
@@ -174,7 +180,7 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Requests</h3>
                 {pendingRentals.map((booking) => (
-                  <div key={booking.id} className="rounded-2xl bg-card p-4 shadow-card">
+                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "lending")}>
                     <div className="flex items-center gap-3">
                       <img src={booking.itemImage} alt="" className="h-12 w-12 rounded-xl object-cover" />
                       <div className="flex-1">
@@ -196,7 +202,7 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Past Lent Items</h3>
                 {pastLentItems.map((booking) => (
-                  <div key={`past-${booking.id}`} className="rounded-2xl bg-card p-4 shadow-card">
+                  <div key={`past-${booking.id}`} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "lending")}>
                     <div className="flex items-center gap-3">
                       <img src={booking.itemImage} alt="" className="h-14 w-14 rounded-xl object-cover" />
                       <div className="flex-1">
@@ -299,7 +305,7 @@ const ActivityTab = () => {
                     <User size={16} className="text-muted-foreground" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs text-muted-foreground">Rented from</p>
+                    <p className="text-xs text-muted-foreground">{detailPerspective === "renting" ? "Rented from" : "Rented by"}</p>
                     <Link
                       to={`/user/${encodeURIComponent(detailBooking.otherUser)}`}
                       className="text-sm font-semibold text-primary hover:underline"
@@ -331,7 +337,7 @@ const ActivityTab = () => {
                     <DollarSign size={16} className="text-muted-foreground" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs text-muted-foreground">Total paid</p>
+                    <p className="text-xs text-muted-foreground">{detailPerspective === "renting" ? "Total paid" : "Earned"}</p>
                     <p className="text-sm font-semibold text-foreground">${detailBooking.price.toFixed(2)}</p>
                   </div>
                 </div>
