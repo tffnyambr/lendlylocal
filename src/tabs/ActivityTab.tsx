@@ -157,24 +157,36 @@ const ActivityTab = () => {
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Your Listings</h3>
             {userListings.length > 0 ? (
               userListings.map((item) => (
-                <div key={item.id} className="cursor-pointer flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailListing(item)}>
-                  <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
-                    <p className="text-xs text-muted-foreground">${item.price}/day</p>
+                <div key={item.id} className="cursor-pointer rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailListing(item)}>
+                  <div className="flex items-center gap-3">
+                    <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+                      <p className="text-xs text-muted-foreground">${item.price}/day</p>
+                    </div>
+                    <ToggleRight size={24} className="text-success" />
                   </div>
-                  <ToggleRight size={24} className="text-success" />
+                  <div className="mt-2 flex gap-2 justify-end">
+                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
+                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                  </div>
                 </div>
               ))
             ) : (
               listings.slice(0, 3).map((item) => (
-                <div key={item.id} className="cursor-pointer flex items-center gap-3 rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailListing(item)}>
-                  <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
-                    <p className="text-xs text-muted-foreground">${item.price}/day</p>
+                <div key={item.id} className="cursor-pointer rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailListing(item)}>
+                  <div className="flex items-center gap-3">
+                    <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+                      <p className="text-xs text-muted-foreground">${item.price}/day</p>
+                    </div>
+                    <ToggleRight size={24} className="text-success" />
                   </div>
-                  <ToggleRight size={24} className="text-success" />
+                  <div className="mt-2 flex gap-2 justify-end">
+                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
+                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                  </div>
                 </div>
               ))
             )}
