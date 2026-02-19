@@ -5,13 +5,16 @@ import { useBookings } from "@/context/BookingsContext";
 import { useListings } from "@/context/ListingsContext";
 import { useMessages } from "@/context/MessagesContext";
 import { AnimatePresence, motion } from "framer-motion";
-import { Calendar, DollarSign, ToggleRight, Star, Package, AlertTriangle } from "lucide-react";
+import { Calendar, DollarSign, ToggleRight, Star, Package, AlertTriangle, Clock, User } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { logActivity } from "@/lib/activityLogger";
+import type { BookingItem } from "@/data/mockData";
 
 const ActivityTab = () => {
   const [segment, setSegment] = useState(0);
@@ -25,6 +28,9 @@ const ActivityTab = () => {
 
   // Past lent items (completed bookings from lending perspective)
   const pastLentItems = bookings.filter((b) => b.status === "completed");
+
+  // Rental detail sheet state
+  const [detailBooking, setDetailBooking] = useState<BookingItem | null>(null);
 
   // Liability claim dialog state
   const [claimOpen, setClaimOpen] = useState(false);
@@ -71,7 +77,7 @@ const ActivityTab = () => {
           <motion.div key="renting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3">
             {/* Active rentals */}
             {activeRentals.map((booking) => (
-              <div key={booking.id} className="rounded-2xl bg-card p-4 shadow-card">
+              <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailBooking(booking)}>
                 <div className="flex items-start gap-3">
                   <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
                   <div className="flex-1">
@@ -90,7 +96,7 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Requests</h3>
                 {pendingRentals.map((booking) => (
-                  <div key={booking.id} className="rounded-2xl bg-card p-4 shadow-card">
+                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => setDetailBooking(booking)}>
                     <div className="flex items-start gap-3">
                       <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
                       <div className="flex-1">
@@ -108,14 +114,14 @@ const ActivityTab = () => {
 
             {/* Review prompt for completed */}
             {completedRentals.map((booking) => (
-              <div key={booking.id} className="rounded-2xl bg-primary/5 p-4">
+              <div key={booking.id} className="cursor-pointer rounded-2xl bg-primary/5 p-4 transition-colors active:bg-primary/10" onClick={() => setDetailBooking(booking)}>
                 <div className="flex items-center gap-3">
                   <Star size={18} className="text-primary" />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground">Leave a review</p>
                     <p className="text-xs text-muted-foreground">Rate your rental of {booking.itemTitle}</p>
                   </div>
-                  <button className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground">Review</button>
+                  <button className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground" onClick={(e) => e.stopPropagation()}>Review</button>
                 </div>
               </div>
             ))}
@@ -251,6 +257,114 @@ const ActivityTab = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Rental Detail Sheet */}
+      <Sheet open={!!detailBooking} onOpenChange={(open) => !open && setDetailBooking(null)}>
+        <SheetContent side="bottom" className="rounded-t-3xl px-0 pb-8">
+          {detailBooking && (
+            <div className="flex flex-col">
+              {/* Hero image */}
+              <div className="relative mx-4 overflow-hidden rounded-2xl">
+                <img
+                  src={detailBooking.itemImage}
+                  alt={detailBooking.itemTitle}
+                  className="h-48 w-full object-cover"
+                />
+                <div className="absolute bottom-3 left-3">
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                    detailBooking.status === "active" ? "bg-success/90 text-success-foreground" :
+                    detailBooking.status === "pending" ? "bg-warning/90 text-warning-foreground" :
+                    detailBooking.status === "completed" ? "bg-muted text-muted-foreground" :
+                    "bg-destructive/90 text-destructive-foreground"
+                  }`}>
+                    {detailBooking.status}
+                  </span>
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="px-6 pt-4">
+                <SheetHeader className="text-left">
+                  <SheetTitle className="text-lg font-bold text-foreground">
+                    {detailBooking.itemTitle}
+                  </SheetTitle>
+                </SheetHeader>
+              </div>
+
+              {/* Details */}
+              <div className="mt-4 flex flex-col gap-3 px-6">
+                {/* Rented from */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <User size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Rented from</p>
+                    <Link
+                      to={`/user/${encodeURIComponent(detailBooking.otherUser)}`}
+                      className="text-sm font-semibold text-primary hover:underline"
+                      onClick={() => setDetailBooking(null)}
+                    >
+                      {detailBooking.otherUser}
+                    </Link>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Duration */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <Calendar size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Rental period</p>
+                    <p className="text-sm font-semibold text-foreground">{detailBooking.startDate} – {detailBooking.endDate}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Price breakdown */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <DollarSign size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Total paid</p>
+                    <p className="text-sm font-semibold text-foreground">${detailBooking.price.toFixed(2)}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Status info */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary">
+                    <Clock size={16} className="text-muted-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">Status</p>
+                    <p className="text-sm font-semibold capitalize text-foreground">{detailBooking.status}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action button */}
+              <div className="mt-6 px-6">
+                <Link
+                  to={`/chat/${encodeURIComponent(detailBooking.otherUser)}`}
+                  onClick={() => setDetailBooking(null)}
+                >
+                  <Button className="w-full" variant="outline">
+                    Message {detailBooking.otherUser}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
