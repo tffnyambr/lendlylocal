@@ -8,10 +8,14 @@ const ChatPage = () => {
   const { name } = useParams();
   const navigate = useNavigate();
   const decodedName = decodeURIComponent(name || "");
-  const { getChat, sendMessage } = useMessages();
+  const { getChat, sendMessage, markAsRead } = useMessages();
   const messages = getChat(decodedName);
   const [text, setText] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    markAsRead(decodedName);
+  }, [decodedName, markAsRead]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
