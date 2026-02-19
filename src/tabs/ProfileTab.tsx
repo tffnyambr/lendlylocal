@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Moon, Package, Shield, Star, Sun, User } from "lucide-react";
+import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Package, Settings, Shield, Star, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Switch } from "@/components/ui/switch";
-import { useTheme } from "next-themes";
 
 const stats = [
   { label: "Earnings", value: "$1,240" },
@@ -19,12 +17,12 @@ const menuItems = [
   { icon: Shield, label: "ID Verification" },
   { icon: Package, label: "My Listings" },
   { icon: Star, label: "Reviews" },
+  { icon: Settings, label: "Settings" },
   { icon: HelpCircle, label: "Help & Support" },
 ];
 
 const ProfileTab = () => {
   const { user, signOut } = useAuth();
-  const { theme, setTheme } = useTheme();
   const displayName = user?.user_metadata?.display_name || user?.email || "User";
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -159,19 +157,6 @@ const ProfileTab = () => {
 
       {/* Menu */}
       <div className="rounded-2xl bg-card shadow-card overflow-hidden">
-        {/* Dark Mode Toggle */}
-        <div className="flex w-full items-center gap-3 px-4 py-3.5 border-b border-border">
-          {theme === "dark" ? (
-            <Moon size={18} className="text-muted-foreground" />
-          ) : (
-            <Sun size={18} className="text-muted-foreground" />
-          )}
-          <span className="flex-1 text-left text-sm font-medium text-foreground">Dark Mode</span>
-          <Switch
-            checked={theme === "dark"}
-            onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-          />
-        </div>
         {menuItems.map((item, i) => {
           const Icon = item.icon;
           return (

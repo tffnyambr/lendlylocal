@@ -13,7 +13,6 @@ import { ListingsProvider } from "./context/ListingsContext";
 import { MessagesProvider } from "./context/MessagesContext";
 import { BookingsProvider } from "./context/BookingsContext";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
-import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +39,6 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <ThemeProvider attribute="class" defaultTheme="light" storageKey="lendly-theme">
       <AuthProvider>
         <ListingsProvider>
           <MessagesProvider>
@@ -59,7 +57,6 @@ const App = () => (
           </MessagesProvider>
         </ListingsProvider>
       </AuthProvider>
-      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
