@@ -164,10 +164,10 @@ const ActivityTab = () => {
                       <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
                       <p className="text-xs text-muted-foreground">${item.price}/day</p>
                     </div>
-                  </div>
-                  <div className="mt-2 flex gap-2 justify-end">
-                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
-                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                    <div className="flex gap-2">
+                      <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
+                      <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                    </div>
                   </div>
                 </div>
               ))
@@ -180,11 +180,10 @@ const ActivityTab = () => {
                       <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
                       <p className="text-xs text-muted-foreground">${item.price}/day</p>
                     </div>
-                    
-                  </div>
-                  <div className="mt-2 flex gap-2 justify-end">
-                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
-                    <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                    <div className="flex gap-2">
+                      <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} paused`); }} className="rounded-full bg-warning/15 px-3 py-1 text-xs font-semibold text-warning">Pause</button>
+                      <button onClick={(e) => { e.stopPropagation(); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
+                    </div>
                   </div>
                 </div>
               ))
