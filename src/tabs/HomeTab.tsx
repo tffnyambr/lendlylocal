@@ -14,14 +14,14 @@ const HomeTab = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [minRating, setMinRating] = useState<number | null>(null);
-  const { listings } = useListings();
+  const { activeListings, listings } = useListings();
 
   const applyFilters = (f: FilterState) => {
     setFilters(f);
     setSelectedCategory(f.category);
   };
 
-  const filtered = listings.filter((l) => {
+  const filtered = activeListings.filter((l) => {
     if (selectedCategory && l.category !== selectedCategory) return false;
     if (minRating && l.rating <= minRating) return false;
     return true;

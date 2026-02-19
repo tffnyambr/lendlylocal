@@ -3,9 +3,12 @@ import { listings as initialListings, type ListingItem } from "@/data/mockData";
 
 interface ListingsContextType {
   listings: ListingItem[];
+  activeListings: ListingItem[];
   removedListings: ListingItem[];
+  pausedIds: Set<string>;
   addListing: (item: Omit<ListingItem, "id" | "rating" | "saved">) => void;
   removeListing: (id: string) => void;
+  togglePause: (id: string) => void;
 }
 
 const ListingsContext = createContext<ListingsContextType | undefined>(undefined);
@@ -13,6 +16,18 @@ const ListingsContext = createContext<ListingsContextType | undefined>(undefined
 export const ListingsProvider = ({ children }: { children: ReactNode }) => {
   const [listings, setListings] = useState<ListingItem[]>(initialListings);
   const [removedListings, setRemovedListings] = useState<ListingItem[]>([]);
+  const [pausedIds, setPausedIds] = useState<Set<string>>(new Set());
+
+  const activeListings = listings.filter((l) => !pausedIds.has(l.id));
+
+  const togglePause = (id: string) => {
+    setPausedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const addListing = (item: Omit<ListingItem, "id" | "rating" | "saved">) => {
     const newItem: ListingItem = {
@@ -35,7 +50,7 @@ export const ListingsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ListingsContext.Provider value={{ listings, removedListings, addListing, removeListing }}>
+    <ListingsContext.Provider value={{ listings, activeListings, removedListings, pausedIds, addListing, removeListing, togglePause }}>
       {children}
     </ListingsContext.Provider>
   );

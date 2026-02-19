@@ -20,7 +20,7 @@ import { MapPin } from "lucide-react";
 const ActivityTab = () => {
   const [segment, setSegment] = useState(0);
   const { sendMessage } = useMessages();
-  const { listings, removedListings, removeListing } = useListings();
+  const { listings, removedListings, removeListing, togglePause, pausedIds } = useListings();
   const { bookings } = useBookings();
   const userListings = listings.filter((l) => l.owner === "You");
   const pendingRentals = bookings.filter((b) => b.status === "pending");
@@ -48,7 +48,6 @@ const ActivityTab = () => {
   // Listing detail sheet state
   const [detailListing, setDetailListing] = useState<ListingItem | null>(null);
   const [removedOpen, setRemovedOpen] = useState(false);
-  const [pausedIds, setPausedIds] = useState<Set<string>>(new Set());
 
   const handleOpenClaim = (booking: typeof bookings[0]) => {
     setClaimItem(booking);
@@ -167,7 +166,7 @@ const ActivityTab = () => {
                       <p className="text-xs text-muted-foreground">${item.price}/day</p>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={(e) => { e.stopPropagation(); setPausedIds(prev => { const next = new Set(prev); if (next.has(item.id)) { next.delete(item.id); toast.success(`${item.title} resumed`); } else { next.add(item.id); toast.success(`${item.title} paused`); } return next; }); }} className={`rounded-full px-3 py-1 text-xs font-semibold ${pausedIds.has(item.id) ? "bg-success/15 text-success" : "bg-warning/15 text-warning"}`}>{pausedIds.has(item.id) ? "Resume" : "Pause"}</button>
+                      <button onClick={(e) => { e.stopPropagation(); togglePause(item.id); toast.success(pausedIds.has(item.id) ? `${item.title} resumed` : `${item.title} paused`); }} className={`rounded-full px-3 py-1 text-xs font-semibold ${pausedIds.has(item.id) ? "bg-success/15 text-success" : "bg-warning/15 text-warning"}`}>{pausedIds.has(item.id) ? "Resume" : "Pause"}</button>
                       <button onClick={(e) => { e.stopPropagation(); removeListing(item.id); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
                     </div>
                   </div>
@@ -183,7 +182,7 @@ const ActivityTab = () => {
                       <p className="text-xs text-muted-foreground">${item.price}/day</p>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={(e) => { e.stopPropagation(); setPausedIds(prev => { const next = new Set(prev); if (next.has(item.id)) { next.delete(item.id); toast.success(`${item.title} resumed`); } else { next.add(item.id); toast.success(`${item.title} paused`); } return next; }); }} className={`rounded-full px-3 py-1 text-xs font-semibold ${pausedIds.has(item.id) ? "bg-success/15 text-success" : "bg-warning/15 text-warning"}`}>{pausedIds.has(item.id) ? "Resume" : "Pause"}</button>
+                      <button onClick={(e) => { e.stopPropagation(); togglePause(item.id); toast.success(pausedIds.has(item.id) ? `${item.title} resumed` : `${item.title} paused`); }} className={`rounded-full px-3 py-1 text-xs font-semibold ${pausedIds.has(item.id) ? "bg-success/15 text-success" : "bg-warning/15 text-warning"}`}>{pausedIds.has(item.id) ? "Resume" : "Pause"}</button>
                       <button onClick={(e) => { e.stopPropagation(); removeListing(item.id); toast.success(`${item.title} removed`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Remove</button>
                     </div>
                   </div>
