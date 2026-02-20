@@ -128,33 +128,22 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Past Rented Items</h3>
                 {completedRentals.map((booking) => (
-                  <div key={booking.id} className="rounded-2xl bg-card p-4 shadow-card">
-                    <div className="cursor-pointer flex items-start gap-3 transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "renting")}>
-                      <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-3 shadow-card transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "renting")}>
+                    <div className="flex items-center gap-3">
+                      <img src={booking.itemImage} alt="" className="h-14 w-14 rounded-xl object-cover" />
                       <div className="flex-1">
                         <h3 className="text-sm font-semibold text-foreground">{booking.itemTitle}</h3>
                         <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <User size={10} /> {booking.otherUser}
+                          <User size={10} /> {booking.otherUser} · <Calendar size={10} /> {booking.startDate} – {booking.endDate}
                         </p>
-                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Calendar size={10} /> {booking.startDate} – {booking.endDate}
-                        </p>
-                        <div className="mt-1.5 flex items-center gap-2">
-                          <span className="text-xs font-semibold text-foreground">${booking.price}</span>
-                          <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">Completed</span>
-                        </div>
+                        <span className="text-xs font-semibold text-foreground">${booking.price}</span>
                       </div>
-                    </div>
-                    <div className="mt-3 flex gap-2">
-                      <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={() => toast.success("Review submitted! Thank you.")}>
-                        <Star size={14} className="mr-1" />
-                        Review
-                      </Button>
-                      <Link to={`/item/${listings.find(l => l.title === booking.itemTitle)?.id ?? ""}`} className="flex-1">
-                        <Button variant="default" size="sm" className="w-full text-xs">
-                          Rent Again
-                        </Button>
-                      </Link>
+                      <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => toast.success("Review submitted! Thank you.")} className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">Review</button>
+                        <Link to={`/item/${listings.find(l => l.title === booking.itemTitle)?.id ?? ""}`}>
+                          <button className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">Rent Again</button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 ))}
