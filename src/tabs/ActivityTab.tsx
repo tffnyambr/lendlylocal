@@ -128,8 +128,8 @@ const ActivityTab = () => {
               <>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Past Rented Items</h3>
                 {completedRentals.map((booking) => (
-                  <div key={booking.id} className="cursor-pointer rounded-2xl bg-card p-4 shadow-card transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "renting")}>
-                    <div className="flex items-start gap-3">
+                  <div key={booking.id} className="rounded-2xl bg-card p-4 shadow-card">
+                    <div className="cursor-pointer flex items-start gap-3 transition-colors active:bg-secondary/50" onClick={() => openDetail(booking, "renting")}>
                       <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
                       <div className="flex-1">
                         <h3 className="text-sm font-semibold text-foreground">{booking.itemTitle}</h3>
@@ -144,6 +144,17 @@ const ActivityTab = () => {
                           <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-semibold text-muted-foreground">Completed</span>
                         </div>
                       </div>
+                    </div>
+                    <div className="mt-3 flex gap-2">
+                      <Button variant="outline" size="sm" className="flex-1 text-xs" onClick={() => toast.success("Review submitted! Thank you.")}>
+                        <Star size={14} className="mr-1" />
+                        Review
+                      </Button>
+                      <Link to={`/item/${listings.find(l => l.title === booking.itemTitle)?.id ?? ""}`} className="flex-1">
+                        <Button variant="default" size="sm" className="w-full text-xs">
+                          Rent Again
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 ))}
