@@ -87,7 +87,7 @@ const PurchasesTab = () => {
               <div className="flex items-center gap-3 rounded-xl bg-destructive/10 p-3 mb-4">
                 <Clock size={18} className="text-destructive" />
                 <div>
-                  <p className="text-sm font-medium text-foreground">Return reminder</p>
+                  <p className="text-sm font-medium text-foreground">Reminder</p>
                   <p className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar size={10} />
                     Canon DSLR Camera is due in 2 days
