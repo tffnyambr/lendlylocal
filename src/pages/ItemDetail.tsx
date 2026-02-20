@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useListings } from "@/context/ListingsContext";
 import { useBookings } from "@/context/BookingsContext";
+import { useReviews } from "@/context/ReviewsContext";
 import { ArrowLeft, Heart, Share2, Star, MapPin, Calendar, Shield, ChevronRight, User, Truck, MapPinned } from "lucide-react";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { useState } from "react";
@@ -10,19 +11,15 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { logActivity } from "@/lib/activityLogger";
 
-const reviews = [
-  { id: 1, user: "Emily R.", rating: 5, date: "Jan 2026", comment: "Excellent condition, exactly as described. Would rent again!" },
-  { id: 2, user: "Carlos M.", rating: 4, date: "Dec 2025", comment: "Great item, owner was very responsive and flexible with pickup." },
-  { id: 3, user: "Sophie L.", rating: 5, date: "Nov 2025", comment: "Perfect for my weekend trip. Highly recommend this listing." },
-];
-
 
 const ItemDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { listings } = useListings();
   const { addBooking } = useBookings();
+  const { getReviewsForItem } = useReviews();
   const item = listings.find((l) => l.id === id);
+  const reviews = id ? getReviewsForItem(id) : [];
   const [saved, setSaved] = useState(item?.saved ?? false);
   const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
   const [selectedRange, setSelectedRange] = useState<{ start: Date; end: Date | null } | null>(null);
@@ -197,12 +194,17 @@ const ItemDetail = () => {
         {/* Reviews */}
         <section>
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-base font-semibold text-foreground">Reviews</h2>
+            <h2 className="font-display text-base font-semibold text-foreground">Reviews ({reviews.length})</h2>
             <div className="flex items-center gap-1 text-sm">
               <Star size={14} className="fill-accent text-accent" />
-              <span className="font-semibold text-foreground">{item.rating}</span>
+              <span className="font-semibold text-foreground">
+                {reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : item.rating}
+              </span>
             </div>
           </div>
+          {reviews.length === 0 && (
+            <p className="mt-2 text-sm text-muted-foreground">No reviews yet.</p>
+          )}
           <div className="mt-2 flex flex-col gap-3">
             {reviews.map((review) => (
               <div key={review.id} className="rounded-2xl bg-card p-3 shadow-card">

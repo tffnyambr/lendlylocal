@@ -4,6 +4,7 @@ import SegmentedControl from "@/components/SegmentedControl";
 import { useBookings } from "@/context/BookingsContext";
 import { useListings } from "@/context/ListingsContext";
 import { useMessages } from "@/context/MessagesContext";
+import { useReviews } from "@/context/ReviewsContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, DollarSign, ToggleRight, Star, Package, AlertTriangle, Clock, User, ChevronDown } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -22,6 +23,7 @@ const ActivityTab = () => {
   const { sendMessage } = useMessages();
   const { listings, removedListings, removeListing, togglePause, pausedIds } = useListings();
   const { bookings } = useBookings();
+  const { addReview } = useReviews();
   const userListings = listings.filter((l) => l.owner === "You");
   const pendingRentals = bookings.filter((b) => b.status === "pending");
   const activeRentals = bookings.filter((b) => b.status === "active");
@@ -48,6 +50,36 @@ const ActivityTab = () => {
   // Listing detail sheet state
   const [detailListing, setDetailListing] = useState<ListingItem | null>(null);
   const [removedOpen, setRemovedOpen] = useState(false);
+
+  // Review dialog state
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewBooking, setReviewBooking] = useState<BookingItem | null>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+
+  const handleOpenReview = (booking: BookingItem) => {
+    setReviewBooking(booking);
+    setReviewRating(5);
+    setReviewComment("");
+    setReviewOpen(true);
+  };
+
+  const handleSubmitReview = () => {
+    if (!reviewComment.trim()) {
+      toast.error("Please write a comment.");
+      return;
+    }
+    const itemId = listings.find(l => l.title === reviewBooking?.itemTitle)?.id ?? "";
+    addReview({
+      itemId,
+      user: "You",
+      rating: reviewRating,
+      date: new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+      comment: reviewComment,
+    });
+    toast.success("Review submitted! Thank you.");
+    setReviewOpen(false);
+  };
 
   const handleOpenClaim = (booking: typeof bookings[0]) => {
     setClaimItem(booking);
@@ -139,7 +171,7 @@ const ActivityTab = () => {
                         <span className="text-xs font-semibold text-foreground">${booking.price}</span>
                       </div>
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                        <button onClick={() => toast.success("Review submitted! Thank you.")} className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">Review</button>
+                        <button onClick={() => handleOpenReview(booking)} className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">Review</button>
                         <Link to={`/item/${listings.find(l => l.title === booking.itemTitle)?.id ?? ""}`}>
                           <button className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">Rent Again</button>
                         </Link>
@@ -326,6 +358,45 @@ const ActivityTab = () => {
             </div>
             <Button onClick={handleSubmitClaim} className="w-full">
               Submit Claim
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Review Dialog */}
+      <Dialog open={reviewOpen} onOpenChange={setReviewOpen}>
+        <DialogContent className="rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>Leave a Review</DialogTitle>
+            <DialogDescription>
+              Share your experience with <span className="font-semibold text-foreground">{reviewBooking?.itemTitle}</span>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 pt-2">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Rating</label>
+              <div className="flex gap-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <button key={i} type="button" onClick={() => setReviewRating(i + 1)}>
+                    <Star
+                      size={24}
+                      className={i < reviewRating ? "fill-accent text-accent" : "text-muted-foreground/30"}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Comment</label>
+              <Textarea
+                placeholder="How was your experience?"
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                rows={4}
+              />
+            </div>
+            <Button onClick={handleSubmitReview} className="w-full">
+              Submit Review
             </Button>
           </div>
         </DialogContent>

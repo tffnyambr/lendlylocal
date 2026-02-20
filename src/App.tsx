@@ -13,6 +13,7 @@ import { ListingsProvider } from "./context/ListingsContext";
 import { MessagesProvider } from "./context/MessagesContext";
 import { BookingsProvider } from "./context/BookingsContext";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
+import { ReviewsProvider } from "./context/ReviewsContext";
 
 const queryClient = new QueryClient();
 
@@ -42,18 +43,20 @@ const App = () => (
       <AuthProvider>
         <ListingsProvider>
           <MessagesProvider>
-            <BookingsProvider>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                  <Route path="/item/:id" element={<ProtectedRoute><ItemDetail /></ProtectedRoute>} />
-                  <Route path="/user/:name" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-                  <Route path="/chat/:name" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </BookingsProvider>
+              <BookingsProvider>
+                <ReviewsProvider>
+                  <BrowserRouter>
+                    <Routes>
+                      <Route path="/auth" element={<AuthPage />} />
+                      <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                      <Route path="/item/:id" element={<ProtectedRoute><ItemDetail /></ProtectedRoute>} />
+                      <Route path="/user/:name" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+                      <Route path="/chat/:name" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </BrowserRouter>
+                </ReviewsProvider>
+              </BookingsProvider>
           </MessagesProvider>
         </ListingsProvider>
       </AuthProvider>
