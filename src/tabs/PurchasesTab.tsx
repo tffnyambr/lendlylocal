@@ -80,9 +80,15 @@ const PurchasesTab = () => {
                   <div>
                     <div className="flex items-center gap-1.5 mb-1">
                       <h4 className="text-sm font-semibold text-foreground">{booking.itemTitle}</h4>
-                      <span className="flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
-                        <ArrowDownLeft size={10} /> Renting
-                      </span>
+                      {booking.isLending ? (
+                        <span className="flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
+                          <ArrowUpRight size={10} /> Lending
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
+                          <ArrowDownLeft size={10} /> Renting
+                        </span>
+                      )}
                     </div>
                     <p className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Calendar size={10} />
