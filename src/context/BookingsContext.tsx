@@ -23,7 +23,7 @@ export const BookingsProvider = ({ children }: { children: ReactNode }) => {
 
   const acceptBooking = (id: string) => {
     setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "active" as const } : b))
+      prev.map((b) => (b.id === id ? { ...b, status: "active" as const, isLending: true } : b))
     );
   };
 

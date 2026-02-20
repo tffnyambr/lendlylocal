@@ -30,6 +30,7 @@ export interface BookingItem {
   startDate: string;
   endDate: string;
   price: number;
+  isLending?: boolean;
 }
 
 export interface MessageThread {
