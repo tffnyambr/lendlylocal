@@ -1,15 +1,19 @@
 import { useState } from "react";
 import SegmentedControl from "@/components/SegmentedControl";
-import { bookings, listings } from "@/data/mockData";
+import { listings } from "@/data/mockData";
+import { useBookings } from "@/context/BookingsContext";
 import { AnimatePresence, motion } from "framer-motion";
-import { Clock, MapPin, Minus, Plus, Trash2, Package, Calendar, ArrowDownLeft, ArrowUpRight } from "lucide-react";
+import { Clock, Minus, Plus, Trash2, Calendar, ArrowDownLeft, ArrowUpRight } from "lucide-react";
 
 const PurchasesTab = () => {
   const [segment, setSegment] = useState(0);
   const [days, setDays] = useState(3);
+  const { bookings } = useBookings();
   const rentalFee = listings[3].price * days;
   const serviceFee = Math.round(rentalFee * 0.1);
   const deposit = 50;
+
+  const activeBookings = bookings.filter((b) => b.status === "active");
 
   return (
     <div className="flex flex-col gap-4 pb-4">
@@ -65,80 +69,65 @@ const PurchasesTab = () => {
           </motion.div>
         ) : (
           <motion.div key="tracking" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-4">
-            {/* Active rental tracking */}
-            <div className="rounded-2xl bg-card p-4 shadow-card">
-              <div className="flex gap-3 mb-4">
-                <img src={bookings[0].itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <h4 className="text-sm font-semibold text-foreground">{bookings[0].itemTitle}</h4>
-                    <span className="flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
-                      <ArrowDownLeft size={10} /> Renting
-                    </span>
-                  </div>
-                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar size={10} />
-                    {bookings[0].startDate} – {bookings[0].endDate}
-                  </p>
-              </div>
-            </div>
+            {activeBookings.length === 0 && (
+              <p className="py-8 text-center text-sm text-muted-foreground">No active tracking items</p>
+            )}
 
-              {/* Return reminder */}
-              <div className="flex items-center gap-3 rounded-xl bg-destructive/10 p-3 mb-4">
-                <Clock size={18} className="text-destructive" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">Reminder</p>
-                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar size={10} />
-                    Canon DSLR Camera is due in 2 days
-                  </p>
+            {activeBookings.map((booking) => (
+              <div key={booking.id} className="rounded-2xl bg-card p-4 shadow-card">
+                <div className="flex gap-3 mb-4">
+                  <img src={booking.itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <h4 className="text-sm font-semibold text-foreground">{booking.itemTitle}</h4>
+                      <span className="flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
+                        <ArrowDownLeft size={10} /> Renting
+                      </span>
+                    </div>
+                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Calendar size={10} />
+                      {booking.startDate} – {booking.endDate}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Reminder */}
+                <div className="flex items-center gap-3 rounded-xl bg-destructive/10 p-3 mb-4">
+                  <Clock size={18} className="text-destructive" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Reminder</p>
+                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Calendar size={10} />
+                      {booking.itemTitle} is due in 2 days
+                    </p>
+                  </div>
+                </div>
+
+                {/* Timeline */}
+                <div className="flex flex-col gap-0 ml-2">
+                  {[
+                    { label: "Booking confirmed", time: booking.startDate, done: true },
+                    { label: "Picked up", time: booking.startDate, done: true },
+                    { label: "In use", time: "Now", done: true, active: true },
+                    { label: "Return", time: booking.endDate, done: false },
+                  ].map((step, i) => (
+                    <div key={i} className="flex gap-3 items-start">
+                      <div className="flex flex-col items-center">
+                        <div className={`h-3 w-3 rounded-full ${step.active ? "bg-primary ring-4 ring-primary/20" : step.done ? "bg-success" : "bg-muted"}`} />
+                        {i < 3 && <div className={`w-0.5 h-8 ${step.done ? "bg-success/40" : "bg-muted"}`} />}
+                      </div>
+                      <div className="-mt-0.5">
+                        <p className={`text-sm ${step.active ? "font-semibold text-primary" : step.done ? "font-medium text-foreground" : "text-muted-foreground"}`}>{step.label}</p>
+                        <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                          {step.time !== "Now" && <Calendar size={9} />}
+                          {step.time}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              {/* Timeline */}
-              <div className="flex flex-col gap-0 ml-2">
-                {[
-                  { label: "Booking confirmed", time: "Feb 9", done: true },
-                  { label: "Picked up", time: "Feb 10", done: true },
-                  { label: "In use", time: "Now", done: true, active: true },
-                  { label: "Return", time: "Feb 14", done: false },
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-3 items-start">
-                    <div className="flex flex-col items-center">
-                      <div className={`h-3 w-3 rounded-full ${step.active ? "bg-primary ring-4 ring-primary/20" : step.done ? "bg-success" : "bg-muted"}`} />
-                      {i < 3 && <div className={`w-0.5 h-8 ${step.done ? "bg-success/40" : "bg-muted"}`} />}
-                    </div>
-                    <div className="-mt-0.5">
-                      <p className={`text-sm ${step.active ? "font-semibold text-primary" : step.done ? "font-medium text-foreground" : "text-muted-foreground"}`}>{step.label}</p>
-                      <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                        {step.time !== "Now" && <Calendar size={9} />}
-                        {step.time}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Lending tracking */}
-            <div className="rounded-2xl bg-card p-4 shadow-card">
-              <div className="flex gap-3">
-                <img src={bookings[1].itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <h4 className="text-sm font-semibold text-foreground">{bookings[1].itemTitle}</h4>
-                    <span className="flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                      <ArrowUpRight size={10} /> Lending
-                    </span>
-                  </div>
-                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar size={10} />
-                    {bookings[1].startDate} – {bookings[1].endDate}
-                  </p>
-                  <span className="mt-1 inline-block rounded-full bg-warning/15 px-2.5 py-0.5 text-[10px] font-semibold text-warning capitalize">{bookings[1].status}</span>
-                </div>
-              </div>
-            </div>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>
