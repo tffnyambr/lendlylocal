@@ -67,20 +67,20 @@ const PurchasesTab = () => {
           <motion.div key="tracking" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-4">
             {/* Active rental tracking */}
             <div className="rounded-2xl bg-card p-4 shadow-card">
-              <div className="flex gap-3 mb-4">
-                <img src={bookings[0].itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
-                <div>
-                  <div className="flex items-center gap-1.5 mb-1">
+              <div className="mb-4">
+                <div className="flex gap-3">
+                  <img src={bookings[0].itemImage} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                  <div>
                     <h4 className="text-sm font-semibold text-foreground">{bookings[0].itemTitle}</h4>
-                    <span className="flex items-center gap-1 rounded-full bg-info/15 px-2 py-0.5 text-[10px] font-semibold text-info">
-                      <ArrowDownLeft size={10} /> Renting
-                    </span>
+                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Calendar size={10} />
+                      {bookings[0].startDate} – {bookings[0].endDate}
+                    </p>
                   </div>
-                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar size={10} />
-                    {bookings[0].startDate} – {bookings[0].endDate}
-                  </p>
                 </div>
+                <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-semibold text-destructive">
+                  <ArrowDownLeft size={10} /> Renting
+                </span>
               </div>
 
               {/* Timeline */}
