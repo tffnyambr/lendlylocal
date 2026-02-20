@@ -248,7 +248,7 @@ const ActivityTab = () => {
                         <p className="flex items-center gap-1 text-xs text-muted-foreground"><Link to={`/user/${encodeURIComponent(booking.otherUser)}`} className="font-medium text-primary hover:underline">{booking.otherUser}</Link> · <Calendar size={10} /> {booking.startDate}</p>
                       </div>
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                        <button onClick={() => { acceptBooking(booking.id); toast.success(`${booking.itemTitle} accepted`); }} className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">Accept</button>
+                        <button onClick={() => { acceptBooking(booking.id); sendMessage(booking.otherUser, `Your request for "${booking.itemTitle}" has been accepted! The item is ready to add to your cart 🛒`); toast.success(`${booking.itemTitle} accepted`); }} className="rounded-full bg-success/15 px-3 py-1 text-xs font-semibold text-success">Accept</button>
                         <button onClick={() => { declineBooking(booking.id); toast.success(`${booking.itemTitle} declined`); }} className="rounded-full bg-destructive/15 px-3 py-1 text-xs font-semibold text-destructive">Decline</button>
                       </div>
                     </div>
