@@ -72,7 +72,7 @@ const PurchasesTab = () => {
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
                     <h4 className="text-sm font-semibold text-foreground">{bookings[0].itemTitle}</h4>
-                    <span className="flex items-center gap-1 rounded-full bg-info/15 px-2 py-0.5 text-[10px] font-semibold text-info">
+                    <span className="flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
                       <ArrowDownLeft size={10} /> Renting
                     </span>
                   </div>
