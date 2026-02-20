@@ -80,6 +80,18 @@ const PurchasesTab = () => {
                     <Calendar size={10} />
                     {bookings[0].startDate} – {bookings[0].endDate}
                   </p>
+              </div>
+            </div>
+
+              {/* Return reminder */}
+              <div className="flex items-center gap-3 rounded-xl bg-destructive/10 p-3 mb-4">
+                <Clock size={18} className="text-destructive" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">Return reminder</p>
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar size={10} />
+                    Canon DSLR Camera is due in 2 days
+                  </p>
                 </div>
               </div>
 
@@ -125,18 +137,6 @@ const PurchasesTab = () => {
                   </p>
                   <span className="mt-1 inline-block rounded-full bg-warning/15 px-2.5 py-0.5 text-[10px] font-semibold text-warning capitalize">{bookings[1].status}</span>
                 </div>
-              </div>
-            </div>
-
-            {/* Return reminder */}
-            <div className="flex items-center gap-3 rounded-2xl bg-warning/10 p-4">
-              <Clock size={18} className="text-warning" />
-              <div>
-                <p className="text-sm font-medium text-foreground">Return reminder</p>
-                <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Calendar size={10} />
-                  Canon DSLR Camera is due in 2 days
-                </p>
               </div>
             </div>
           </motion.div>
