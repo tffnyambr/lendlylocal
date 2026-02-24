@@ -95,7 +95,7 @@ const RentalHistory = () => {
         >
           <ArrowLeft size={18} className="text-foreground" />
         </button>
-        <h1 className="font-display text-lg font-bold text-foreground">Rental History</h1>
+        <h1 className="font-display text-lg font-bold text-foreground">Lending History</h1>
       </div>
 
       <div className="flex flex-col gap-6 px-4">
