@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,6 +26,7 @@ const menuItems = [
 
 const ProfileTab = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const displayName = user?.user_metadata?.display_name || user?.email || "User";
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -175,7 +177,7 @@ const ProfileTab = () => {
           return (
             <button
               key={item.label}
-              onClick={isSettings ? () => setSettingsOpen(true) : undefined}
+              onClick={isSettings ? () => setSettingsOpen(true) : item.label === "My Listings" ? () => navigate("/rental-history") : undefined}
               className={`flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary ${
                 i < menuItems.length - 1 ? "border-b border-border" : ""
               }`}
