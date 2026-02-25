@@ -14,6 +14,7 @@ import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import ClaimsPage from "./pages/ClaimsPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import MyListingsPage from "./pages/MyListingsPage";
+import PaymentMethodsPage from "./pages/PaymentMethodsPage";
 import { ListingsProvider } from "./context/ListingsContext";
 import { MessagesProvider } from "./context/MessagesContext";
 import { BookingsProvider } from "./context/BookingsContext";
@@ -62,6 +63,7 @@ const App = () => (
                       <Route path="/claims" element={<ProtectedRoute><ClaimsPage /></ProtectedRoute>} />
                       <Route path="/edit-profile" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
                       <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />
+                      <Route path="/payment-methods" element={<ProtectedRoute><PaymentMethodsPage /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </BrowserRouter>

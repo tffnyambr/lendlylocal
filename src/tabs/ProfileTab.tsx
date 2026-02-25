@@ -16,7 +16,7 @@ const stats = [
 
 const menuItems = [
   { icon: User, label: "Edit Profile", route: "/edit-profile" },
-  { icon: CreditCard, label: "Payment Methods" },
+  { icon: CreditCard, label: "Payment Methods", route: "/payment-methods" },
   { icon: Shield, label: "ID Verification" },
   { icon: Package, label: "My Listings", route: "/my-listings" },
   { icon: Star, label: "Reviews" },
