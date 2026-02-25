@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useBookings } from "@/context/BookingsContext";
+import itemHandbag from "@/assets/item-handbag.jpg";
+import itemCamera from "@/assets/item-camera.jpg";
+import itemBike from "@/assets/item-bike.jpg";
 
 interface Claim {
   id: string;
@@ -23,63 +25,52 @@ interface Claim {
   disputed: boolean;
 }
 
-// Generate mock claims from completed bookings
-const useMockClaims = (): Claim[] => {
-  const { bookings } = useBookings();
-  const completed = bookings.filter((b) => b.status === "completed");
-
-  // Create claims for some completed bookings
-  const claims: Claim[] = [
-    {
-      id: "cl-1",
-      itemTitle: completed[0]?.itemTitle ?? "Designer Handbag",
-      itemImage: completed[0]?.itemImage ?? "",
-      renterName: completed[0]?.otherUser ?? "Olivia P.",
-      dateSent: "Feb 1, 2025",
-      amount: 85,
-      description: "Zipper on the main compartment is broken and the leather strap has visible scratches from misuse.",
-      replied: true,
-      replyMessage: "I'm sorry about the damage. I didn't notice the zipper issue until I returned it. I'm willing to pay for repairs.",
-      paid: true,
-      disputed: false,
-    },
-    {
-      id: "cl-2",
-      itemTitle: "Canon DSLR Camera",
-      itemImage: completed.find((b) => b.itemTitle === "Canon DSLR Camera")?.itemImage ?? "",
-      renterName: "James K.",
-      dateSent: "Jan 28, 2025",
-      amount: 220,
-      description: "Lens mount is misaligned causing autofocus failure. Sensor has visible dust spots from improper handling.",
-      replied: true,
-      replyMessage: "I disagree with this claim. The camera was already having issues when I rented it.",
-      paid: false,
-      disputed: false,
-    },
-    {
-      id: "cl-3",
-      itemTitle: "Mountain Bike",
-      itemImage: completed.find((b) => b.itemTitle === "Mountain Bike")?.itemImage ?? "",
-      renterName: "Tom H.",
-      dateSent: "Jan 15, 2025",
-      amount: 150,
-      description: "Front wheel rim is bent and the derailleur hanger is cracked. Requires professional repair.",
-      replied: false,
-      paid: false,
-      disputed: false,
-    },
-  ];
-
-  return claims;
-};
+const mockClaims: Claim[] = [
+  {
+    id: "cl-1",
+    itemTitle: "Designer Handbag",
+    itemImage: itemHandbag,
+    renterName: "Olivia P.",
+    dateSent: "Feb 1, 2025",
+    amount: 85,
+    description: "Zipper on the main compartment is broken and the leather strap has visible scratches from misuse.",
+    replied: true,
+    replyMessage: "I'm sorry about the damage. I didn't notice the zipper issue until I returned it. I'm willing to pay for repairs.",
+    paid: true,
+    disputed: false,
+  },
+  {
+    id: "cl-2",
+    itemTitle: "Canon DSLR Camera",
+    itemImage: itemCamera,
+    renterName: "James K.",
+    dateSent: "Jan 28, 2025",
+    amount: 220,
+    description: "Lens mount is misaligned causing autofocus failure. Sensor has visible dust spots from improper handling.",
+    replied: true,
+    replyMessage: "I disagree with this claim. The camera was already having issues when I rented it.",
+    paid: false,
+    disputed: false,
+  },
+  {
+    id: "cl-3",
+    itemTitle: "Mountain Bike",
+    itemImage: itemBike,
+    renterName: "Tom H.",
+    dateSent: "Jan 15, 2025",
+    amount: 150,
+    description: "Front wheel rim is bent and the derailleur hanger is cracked. Requires professional repair.",
+    replied: false,
+    paid: false,
+    disputed: false,
+  },
+];
 
 const ClaimsPage = () => {
   const navigate = useNavigate();
   const [claims, setClaims] = useState<Claim[] | null>(null);
   const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null);
 
-  // Lazy init
-  const mockClaims = useMockClaims();
   const displayClaims = claims ?? mockClaims;
 
   const handleDispute = (claimId: string) => {
