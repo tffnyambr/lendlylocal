@@ -15,6 +15,8 @@ import ClaimsPage from "./pages/ClaimsPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import MyListingsPage from "./pages/MyListingsPage";
 import PaymentMethodsPage from "./pages/PaymentMethodsPage";
+import IDVerificationPage from "./pages/IDVerificationPage";
+import AdminVerificationPage from "./pages/AdminVerificationPage";
 import { ListingsProvider } from "./context/ListingsContext";
 import { MessagesProvider } from "./context/MessagesContext";
 import { BookingsProvider } from "./context/BookingsContext";
@@ -64,6 +66,8 @@ const App = () => (
                       <Route path="/edit-profile" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
                       <Route path="/my-listings" element={<ProtectedRoute><MyListingsPage /></ProtectedRoute>} />
                       <Route path="/payment-methods" element={<ProtectedRoute><PaymentMethodsPage /></ProtectedRoute>} />
+                      <Route path="/id-verification" element={<ProtectedRoute><IDVerificationPage /></ProtectedRoute>} />
+                      <Route path="/admin/verification" element={<ProtectedRoute><AdminVerificationPage /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </BrowserRouter>

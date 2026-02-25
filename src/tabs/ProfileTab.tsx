@@ -17,7 +17,7 @@ const stats = [
 const menuItems = [
   { icon: User, label: "Edit Profile", route: "/edit-profile" },
   { icon: CreditCard, label: "Payment Methods", route: "/payment-methods" },
-  { icon: Shield, label: "ID Verification" },
+  { icon: Shield, label: "ID Verification", route: "/id-verification" },
   { icon: Package, label: "My Listings", route: "/my-listings" },
   { icon: Star, label: "Reviews" },
   { icon: Settings, label: "Settings" },
@@ -32,6 +32,8 @@ const ProfileTab = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<string>("unverified");
+  const [isAdmin, setIsAdmin] = useState(false);
   const [darkMode, setDarkMode] = useState(() =>
     document.documentElement.classList.contains("dark")
   );
@@ -40,12 +42,17 @@ const ProfileTab = () => {
     if (user) {
       supabase
         .from("profiles")
-        .select("avatar_url")
+        .select("avatar_url, verification_status")
         .eq("user_id", user.id)
         .single()
         .then(({ data }) => {
           if (data?.avatar_url) setAvatarUrl(data.avatar_url);
+          if (data?.verification_status) setVerificationStatus(data.verification_status);
         });
+
+      supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }).then(({ data }) => {
+        setIsAdmin(!!data);
+      });
     }
   }, [user]);
 
@@ -143,9 +150,11 @@ const ProfileTab = () => {
               </div>
             )}
           </button>
-          <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-success">
-            <BadgeCheck size={14} className="text-success-foreground" />
-          </div>
+          {verificationStatus === "verified" && (
+            <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-success">
+              <BadgeCheck size={14} className="text-success-foreground" />
+            </div>
+          )}
         </div>
         <div className="text-center">
           <h2 className="text-lg font-semibold text-foreground">{displayName}</h2>
@@ -193,6 +202,17 @@ const ProfileTab = () => {
           );
         })}
       </div>
+
+      {/* Admin link */}
+      {isAdmin && (
+        <button
+          onClick={() => navigate("/admin/verification")}
+          className="flex items-center justify-center gap-2 rounded-full bg-info/10 py-3 text-sm font-semibold text-info transition-transform active:scale-[0.98]"
+        >
+          <Shield size={16} />
+          <span>Admin: Verification Dashboard</span>
+        </button>
+      )}
 
       {/* Settings Sheet */}
       <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
