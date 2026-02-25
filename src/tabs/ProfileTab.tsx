@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { BadgeCheck, Camera, ChevronDown, ChevronRight, Clock, CreditCard, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
+import { BadgeCheck, BarChart3, Camera, ChevronDown, ChevronRight, Clock, CreditCard, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -194,6 +194,14 @@ const ProfileTab = () => {
               </button>
               {isListings && listingsExpanded && (
                 <div className={`bg-secondary/40 ${i < menuItems.length - 1 ? "border-b border-border" : ""}`}>
+                  <button
+                    onClick={() => navigate("/analytics-dashboard")}
+                    className="flex w-full items-center gap-3 px-4 py-3 pl-11 border-b border-border transition-colors active:bg-secondary"
+                  >
+                    <BarChart3 size={16} className="text-muted-foreground" />
+                    <span className="flex-1 text-left text-sm font-medium text-foreground">Analytics Dashboard</span>
+                    <ChevronRight size={14} className="text-muted-foreground" />
+                  </button>
                   <button
                     onClick={() => navigate("/rental-history")}
                     className="flex w-full items-center gap-3 px-4 py-3 pl-11 transition-colors active:bg-secondary"
