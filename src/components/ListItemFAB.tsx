@@ -1,8 +1,11 @@
-import { useState, useRef } from "react";
-import { Plus, X, Camera, Upload, DollarSign, MapPin, Tag, FileText, Image } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Plus, X, Camera, Upload, DollarSign, MapPin, Tag, FileText, Image, ShieldAlert } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "@/data/mockData";
 import { useListings } from "@/context/ListingsContext";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import {
   Drawer,
   DrawerContent,
@@ -16,7 +19,9 @@ import { Button } from "@/components/ui/button";
 
 const ListItemFAB = () => {
   const { addListing } = useListings();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<string>("unverified");
   const [images, setImages] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -28,6 +33,19 @@ const ListItemFAB = () => {
   const [location, setLocation] = useState("");
   const [condition, setCondition] = useState("excellent");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("profiles")
+        .select("verification_status")
+        .eq("user_id", user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.verification_status) setVerificationStatus(data.verification_status);
+        });
+    }
+  }, [user]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -61,8 +79,15 @@ const ListItemFAB = () => {
     setCondition("excellent");
   };
 
+  const HIGH_VALUE_THRESHOLD = 500;
+
   const handleSubmit = () => {
     if (!title.trim()) return;
+    const itemPrice = Number(price) || 0;
+    if (itemPrice >= HIGH_VALUE_THRESHOLD && verificationStatus !== "verified") {
+      toast.error("ID verification required to list items worth R500 or more. Please verify your identity first.");
+      return;
+    }
     addListing({
       title: title.trim(),
       price: Number(price) || 0,
