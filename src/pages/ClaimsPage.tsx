@@ -66,7 +66,7 @@ const mockClaims: Claim[] = [
   },
 ];
 
-const ClaimsPage = () => {
+const ClaimsPage = ({ onBack }: { onBack?: () => void }) => {
   const navigate = useNavigate();
   const [claims, setClaims] = useState<Claim[] | null>(null);
   const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null);
@@ -105,7 +105,7 @@ const ClaimsPage = () => {
       {/* Header */}
       <div className="flex items-center gap-3 p-4">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => onBack ? onBack() : navigate(-1)}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-card shadow-card"
         >
           <ArrowLeft size={18} className="text-foreground" />
