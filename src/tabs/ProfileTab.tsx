@@ -15,7 +15,7 @@ const stats = [
 ];
 
 const menuItems = [
-  { icon: User, label: "Edit Profile" },
+  { icon: User, label: "Edit Profile", route: "/edit-profile" },
   { icon: CreditCard, label: "Payment Methods" },
   { icon: Shield, label: "ID Verification" },
   { icon: Package, label: "My Listings" },
@@ -179,7 +179,12 @@ const ProfileTab = () => {
           return (
             <div key={item.label}>
               <button
-                onClick={isSettings ? () => setSettingsOpen(true) : isListings ? () => setListingsExpanded(!listingsExpanded) : undefined}
+                onClick={
+                  isSettings ? () => setSettingsOpen(true)
+                  : isListings ? () => setListingsExpanded(!listingsExpanded)
+                  : (item as any).route ? () => navigate((item as any).route)
+                  : undefined
+                }
                 className={`flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary ${
                   i < menuItems.length - 1 && !(isListings && listingsExpanded) ? "border-b border-border" : ""
                 }`}

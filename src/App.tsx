@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import RentalHistory from "./pages/RentalHistory";
 import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import ClaimsPage from "./pages/ClaimsPage";
+import EditProfilePage from "./pages/EditProfilePage";
 import { ListingsProvider } from "./context/ListingsContext";
 import { MessagesProvider } from "./context/MessagesContext";
 import { BookingsProvider } from "./context/BookingsContext";
@@ -58,6 +59,7 @@ const App = () => (
                       <Route path="/rental-history" element={<ProtectedRoute><RentalHistory /></ProtectedRoute>} />
                       <Route path="/analytics-dashboard" element={<ProtectedRoute><AnalyticsDashboard /></ProtectedRoute>} />
                       <Route path="/claims" element={<ProtectedRoute><ClaimsPage /></ProtectedRoute>} />
+                      <Route path="/edit-profile" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </BrowserRouter>
