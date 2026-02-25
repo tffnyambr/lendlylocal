@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { BadgeCheck, BarChart3, Camera, ChevronDown, ChevronRight, Clock, CreditCard, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
+import { BadgeCheck, BarChart3, Camera, ChevronDown, ChevronRight, Clock, CreditCard, FileWarning, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -204,10 +204,18 @@ const ProfileTab = () => {
                   </button>
                   <button
                     onClick={() => navigate("/rental-history")}
-                    className="flex w-full items-center gap-3 px-4 py-3 pl-11 transition-colors active:bg-secondary"
+                    className="flex w-full items-center gap-3 px-4 py-3 pl-11 border-b border-border transition-colors active:bg-secondary"
                   >
                     <Clock size={16} className="text-muted-foreground" />
                     <span className="flex-1 text-left text-sm font-medium text-foreground">Lending History</span>
+                    <ChevronRight size={14} className="text-muted-foreground" />
+                  </button>
+                  <button
+                    onClick={() => navigate("/claims")}
+                    className="flex w-full items-center gap-3 px-4 py-3 pl-11 transition-colors active:bg-secondary"
+                  >
+                    <FileWarning size={16} className="text-muted-foreground" />
+                    <span className="flex-1 text-left text-sm font-medium text-foreground">Claims</span>
                     <ChevronRight size={14} className="text-muted-foreground" />
                   </button>
                 </div>
