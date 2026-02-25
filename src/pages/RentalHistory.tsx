@@ -29,7 +29,7 @@ interface RentalRecord {
 
 const formatDateHeading = (dateStr: string) => dateStr;
 
-const RentalHistory = () => {
+const RentalHistory = ({ onBack }: { onBack?: () => void }) => {
   const navigate = useNavigate();
   const { listings } = useListings();
   const { bookings } = useBookings();
@@ -90,7 +90,7 @@ const RentalHistory = () => {
       {/* Header */}
       <div className="flex items-center gap-3 p-4">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => onBack ? onBack() : navigate(-1)}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-card shadow-card"
         >
           <ArrowLeft size={18} className="text-foreground" />

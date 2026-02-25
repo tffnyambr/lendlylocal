@@ -59,7 +59,7 @@ const PIE_COLORS = [
   "hsl(0, 72%, 55%)",    // destructive
 ];
 
-const AnalyticsDashboard = () => {
+const AnalyticsDashboard = ({ onBack }: { onBack?: () => void }) => {
   const navigate = useNavigate();
   const { listings } = useListings();
   const { bookings } = useBookings();
@@ -110,7 +110,7 @@ const AnalyticsDashboard = () => {
       {/* Header */}
       <div className="sticky top-0 z-10 flex items-center gap-3 bg-background/80 p-4 backdrop-blur-md">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => onBack ? onBack() : navigate(-1)}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-card shadow-card"
         >
           <ArrowLeft size={18} className="text-foreground" />
