@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { BadgeCheck, Camera, ChevronRight, CreditCard, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
+import { BadgeCheck, Camera, ChevronDown, ChevronRight, Clock, CreditCard, HelpCircle, LogOut, Moon, Package, Settings, Shield, Star, Sun, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -32,6 +32,7 @@ const ProfileTab = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [listingsExpanded, setListingsExpanded] = useState(false);
   const [darkMode, setDarkMode] = useState(() =>
     document.documentElement.classList.contains("dark")
   );
@@ -174,18 +175,36 @@ const ProfileTab = () => {
         {menuItems.map((item, i) => {
           const Icon = item.icon;
           const isSettings = item.label === "Settings";
+          const isListings = item.label === "My Listings";
           return (
-            <button
-              key={item.label}
-              onClick={isSettings ? () => setSettingsOpen(true) : item.label === "My Listings" ? () => navigate("/rental-history") : undefined}
-              className={`flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary ${
-                i < menuItems.length - 1 ? "border-b border-border" : ""
-              }`}
-            >
-              <Icon size={18} className="text-muted-foreground" />
-              <span className="flex-1 text-left text-sm font-medium text-foreground">{item.label}</span>
-              <ChevronRight size={16} className="text-muted-foreground" />
-            </button>
+            <div key={item.label}>
+              <button
+                onClick={isSettings ? () => setSettingsOpen(true) : isListings ? () => setListingsExpanded(!listingsExpanded) : undefined}
+                className={`flex w-full items-center gap-3 px-4 py-3.5 transition-colors active:bg-secondary ${
+                  i < menuItems.length - 1 && !(isListings && listingsExpanded) ? "border-b border-border" : ""
+                }`}
+              >
+                <Icon size={18} className="text-muted-foreground" />
+                <span className="flex-1 text-left text-sm font-medium text-foreground">{item.label}</span>
+                {isListings ? (
+                  <ChevronDown size={16} className={`text-muted-foreground transition-transform ${listingsExpanded ? "rotate-180" : ""}`} />
+                ) : (
+                  <ChevronRight size={16} className="text-muted-foreground" />
+                )}
+              </button>
+              {isListings && listingsExpanded && (
+                <div className={`bg-secondary/40 ${i < menuItems.length - 1 ? "border-b border-border" : ""}`}>
+                  <button
+                    onClick={() => navigate("/rental-history")}
+                    className="flex w-full items-center gap-3 px-4 py-3 pl-11 transition-colors active:bg-secondary"
+                  >
+                    <Clock size={16} className="text-muted-foreground" />
+                    <span className="flex-1 text-left text-sm font-medium text-foreground">Lending History</span>
+                    <ChevronRight size={14} className="text-muted-foreground" />
+                  </button>
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
