@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import AddCardDialog from "@/components/AddCardDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -66,6 +67,8 @@ const PaymentMethodsPage = () => {
   const [loading, setLoading] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [addingCard, setAddingCard] = useState(false);
+  const [setupSecret, setSetupSecret] = useState<string | null>(null);
+  const [showAddCard, setShowAddCard] = useState(false);
 
   const callStripe = useCallback(
     async (action: string, extra: Record<string, unknown> = {}) => {
@@ -110,21 +113,18 @@ const PaymentMethodsPage = () => {
     setAddingCard(true);
     try {
       const data = await callStripe("create-setup-intent");
-      // Redirect to Stripe-hosted card setup page
-      // For now, use Stripe Checkout in setup mode via a separate flow
-      // The clientSecret can be used with Stripe.js Elements
-      toast.info(
-        "Stripe setup ready. Client secret generated — integrate Stripe.js Elements for the card form.",
-        { duration: 5000 }
-      );
-      // In a production app, you'd use @stripe/stripe-js here
-      // For now we'll re-fetch after adding via Stripe dashboard
-      console.log("SetupIntent client secret:", data.clientSecret);
+      setSetupSecret(data.clientSecret);
+      setShowAddCard(true);
     } catch (err: any) {
       toast.error(err.message || "Failed to start card setup");
     } finally {
       setAddingCard(false);
     }
+  };
+
+  const handleCardAdded = () => {
+    setSetupSecret(null);
+    fetchCards();
   };
 
   const handleSetDefault = async (id: string) => {
@@ -256,6 +256,13 @@ const PaymentMethodsPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AddCardDialog
+        open={showAddCard}
+        onOpenChange={setShowAddCard}
+        clientSecret={setupSecret}
+        onSuccess={handleCardAdded}
+      />
     </div>
   );
 };
