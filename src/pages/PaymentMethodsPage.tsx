@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ChevronRight, Plus, Banknote, Trash2, Star } from "lucide-react";
+import { ArrowLeft, ChevronRight, Plus, Banknote, Trash2, Star, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +22,7 @@ interface StripeCard {
   last4: string;
   expMonth: number;
   expYear: number;
+  isDefault: boolean;
 }
 
 const brandDisplay: Record<string, string> = {
@@ -129,6 +130,9 @@ const PaymentMethodsPage = () => {
   const handleSetDefault = async (id: string) => {
     try {
       await callStripe("set-default-payment-method", { paymentMethodId: id });
+      setCards((prev) =>
+        prev.map((c) => ({ ...c, isDefault: c.id === id }))
+      );
       toast.success("Default payment method updated");
     } catch (err: any) {
       toast.error(err.message || "Failed to set default");
@@ -168,24 +172,34 @@ const PaymentMethodsPage = () => {
                   key={card.id}
                   className={`flex w-full items-center gap-3 px-4 py-3.5 ${
                     i < cards.length - 1 ? "border-b border-border" : ""
-                  }`}
+                  } ${card.isDefault ? "bg-primary/5" : ""}`}
                 >
                   <CardBrandIcon brand={card.brand} />
                   <div className="flex-1 text-left">
-                    <span className="text-sm font-semibold text-foreground">
-                      •••• {card.last4}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-foreground">
+                        •••• {card.last4}
+                      </span>
+                      {card.isDefault && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                          <BadgeCheck size={10} />
+                          Default
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground">
                       Expires {String(card.expMonth).padStart(2, "0")}/{card.expYear}
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleSetDefault(card.id)}
-                    className="p-1.5 rounded-lg text-muted-foreground transition-colors hover:text-accent hover:bg-accent/10"
-                    title="Set as default"
-                  >
-                    <Star size={16} />
-                  </button>
+                  {!card.isDefault && (
+                    <button
+                      onClick={() => handleSetDefault(card.id)}
+                      className="p-1.5 rounded-lg text-muted-foreground transition-colors hover:text-primary hover:bg-primary/10"
+                      title="Set as default"
+                    >
+                      <Star size={16} />
+                    </button>
+                  )}
                   <button
                     onClick={() => setDeleteTarget(card.id)}
                     className="p-1.5 rounded-lg text-muted-foreground transition-colors hover:text-destructive hover:bg-destructive/10"

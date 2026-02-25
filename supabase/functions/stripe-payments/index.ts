@@ -77,12 +77,15 @@ serve(async (req) => {
           customer: customerId,
           type: "card",
         });
+        const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer;
+        const defaultPmId = customer.invoice_settings?.default_payment_method;
         const cards = methods.data.map((pm) => ({
           id: pm.id,
           brand: pm.card?.brand || "unknown",
           last4: pm.card?.last4 || "****",
           expMonth: pm.card?.exp_month,
           expYear: pm.card?.exp_year,
+          isDefault: pm.id === defaultPmId,
         }));
         return new Response(JSON.stringify({ cards }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
