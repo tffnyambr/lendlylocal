@@ -10,6 +10,7 @@ import ChatPage from "./pages/ChatPage";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
 import RentalHistory from "./pages/RentalHistory";
+import AnalyticsDashboard from "./pages/AnalyticsDashboard";
 import { ListingsProvider } from "./context/ListingsContext";
 import { MessagesProvider } from "./context/MessagesContext";
 import { BookingsProvider } from "./context/BookingsContext";
@@ -54,6 +55,7 @@ const App = () => (
                       <Route path="/user/:name" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
                       <Route path="/chat/:name" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
                       <Route path="/rental-history" element={<ProtectedRoute><RentalHistory /></ProtectedRoute>} />
+                      <Route path="/analytics-dashboard" element={<ProtectedRoute><AnalyticsDashboard /></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </BrowserRouter>
