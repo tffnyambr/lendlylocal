@@ -38,39 +38,6 @@ export type Database = {
         }
         Relationships: []
       }
-      payment_methods: {
-        Row: {
-          brand: string | null
-          created_at: string
-          id: string
-          is_default: boolean
-          last4: string | null
-          subtitle: string | null
-          type: string
-          user_id: string
-        }
-        Insert: {
-          brand?: string | null
-          created_at?: string
-          id?: string
-          is_default?: boolean
-          last4?: string | null
-          subtitle?: string | null
-          type?: string
-          user_id: string
-        }
-        Update: {
-          brand?: string | null
-          created_at?: string
-          id?: string
-          is_default?: boolean
-          last4?: string | null
-          subtitle?: string | null
-          type?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -82,6 +49,7 @@ export type Database = {
           id: string
           phone: string | null
           profile_public: boolean
+          stripe_customer_id: string | null
           updated_at: string
           user_id: string
         }
@@ -95,6 +63,7 @@ export type Database = {
           id?: string
           phone?: string | null
           profile_public?: boolean
+          stripe_customer_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -108,6 +77,7 @@ export type Database = {
           id?: string
           phone?: string | null
           profile_public?: boolean
+          stripe_customer_id?: string | null
           updated_at?: string
           user_id?: string
         }
